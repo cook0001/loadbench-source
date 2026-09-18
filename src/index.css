@@ -44,6 +44,7 @@ body {
   font-size: 13px;
   line-height: 1.5;
   overflow: hidden;
+  -webkit-user-select: none;
   user-select: none;
   -webkit-font-smoothing: antialiased;
 }
@@ -64,6 +65,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 button {
