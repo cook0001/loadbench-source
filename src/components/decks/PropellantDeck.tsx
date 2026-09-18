@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Flame, Sparkles } from 'lucide-react';
+import { Flame, Sparkles, Database } from 'lucide-react';
 import { PropellantSpec } from '../../types/propellant';
 import { formatWeight } from '../../utils/formatters';
 
@@ -13,6 +13,7 @@ interface PropellantDeckProps {
   baOffsetPct: number;
   onChangeBaOffsetPct: (val: number) => void;
   isMetric: boolean;
+  onOpenPowderDB?: () => void;
 }
 
 export const PropellantDeck: React.FC<PropellantDeckProps> = ({
@@ -25,6 +26,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
   baOffsetPct,
   onChangeBaOffsetPct,
   isMetric,
+  onOpenPowderDB,
 }) => {
   const [brandFilter, setBrandFilter] = useState<string>('all');
 
@@ -70,30 +72,58 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
 
       {/* Powder Selector & Brand Filter */}
       <div className="input-field">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
-          <label className="input-label">Select Propellant ({filteredPropellants.length} of {propellants.length})</label>
-          <select
-            value={brandFilter}
-            onChange={(e) => setBrandFilter(e.target.value)}
-            style={{
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--accent-cyan)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '4px',
-              fontSize: '10px',
-              padding: '2px 6px',
-              fontFamily: 'var(--font-mono)',
-              cursor: 'pointer',
-              outline: 'none',
-            }}
-          >
-            <option value="all">All Brands ({propellants.length})</option>
-            {manufacturers.map(m => (
-              <option key={m} value={m}>
-                {m} ({propellants.filter(p => p.manufacturer === m).length})
-              </option>
-            ))}
-          </select>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px', gap: '6px' }}>
+          <label className="input-label" style={{ marginBottom: 0 }}>
+            Select Propellant ({filteredPropellants.length} of {propellants.length})
+          </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <select
+              value={brandFilter}
+              onChange={(e) => setBrandFilter(e.target.value)}
+              style={{
+                backgroundColor: 'var(--bg-secondary)',
+                color: 'var(--accent-cyan)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '4px',
+                fontSize: '10px',
+                padding: '2px 6px',
+                fontFamily: 'var(--font-mono)',
+                cursor: 'pointer',
+                outline: 'none',
+              }}
+            >
+              <option value="all">All Brands ({propellants.length})</option>
+              {manufacturers.map(m => (
+                <option key={m} value={m}>
+                  {m} ({propellants.filter(p => p.manufacturer === m).length})
+                </option>
+              ))}
+            </select>
+            {onOpenPowderDB && (
+              <button
+                type="button"
+                onClick={onOpenPowderDB}
+                title="Open Complete Propellant Database Viewer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  backgroundColor: 'rgba(6, 182, 212, 0.12)',
+                  color: 'var(--accent-cyan)',
+                  border: '1px solid rgba(6, 182, 212, 0.3)',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  padding: '2px 6px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <Database size={11} />
+                <span>Viewer</span>
+              </button>
+            )}
+          </div>
         </div>
 
         <select

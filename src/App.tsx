@@ -34,21 +34,28 @@ import { ChargeLadderModal } from './components/tools/ChargeLadderModal';
 import { PowderCompareModal } from './components/tools/PowderCompareModal';
 import { OBTModal } from './components/tools/OBTModal';
 import { ChronoTruingModal } from './components/tools/ChronoTruingModal';
+import { PowderDatabaseModal } from './components/tools/PowderDatabaseModal';
 import { ImportModal } from './components/modals/ImportModal';
 import { ExportReportModal } from './components/modals/ExportReportModal';
 
 export const App: React.FC = () => {
   const leftPanelRef = useRef<HTMLElement | null>(null);
 
-  // Database Collections
+  // Database Collections (useMemo ensures dynamic hot reload of full propellant catalog)
   const [cartridges, setCartridges] = useState<CartridgeSpec[]>(initialCartridges as CartridgeSpec[]);
-  const [propellants] = useState<PropellantSpec[]>(initialPropellants as PropellantSpec[]);
+  const [customPropellants] = useState<PropellantSpec[]>([]);
+  const propellants = useMemo<PropellantSpec[]>(() => {
+    return [...(initialPropellants as PropellantSpec[]), ...customPropellants];
+  }, [customPropellants]);
   const [projectiles] = useState<ProjectileSpec[]>(initialProjectiles as ProjectileSpec[]);
 
-  // Active Selected Components (Default: 6.5 Creedmoor with 140 gr ELD-M and H4350)
+  // Active Selected Components (Default: 6.5 Creedmoor with 140 gr ELD-M and Hodgdon H4350)
   const [cartridge, setCartridge] = useState<CartridgeSpec>(cartridges[0]);
   const [projectile, setProjectile] = useState<ProjectileSpec>(projectiles[0]);
-  const [propellant, setPropellant] = useState<PropellantSpec>(propellants[1]); // H4350
+  const defaultPropellant = useMemo(() => {
+    return (initialPropellants as PropellantSpec[]).find(p => p.id === 'hodgdon_h4350') || (initialPropellants[0] as PropellantSpec);
+  }, []);
+  const [propellant, setPropellant] = useState<PropellantSpec>(defaultPropellant);
 
   // Load Parameters
   const [chargeGrains, setChargeGrains] = useState<number>(41.5);
@@ -67,6 +74,7 @@ export const App: React.FC = () => {
   // Modal Visibility States
   const [isLadderOpen, setIsLadderOpen] = useState<boolean>(false);
   const [isCompareOpen, setIsCompareOpen] = useState<boolean>(false);
+  const [isPowderDBOpen, setIsPowderDBOpen] = useState<boolean>(false);
   const [isOBTOpen, setIsOBTOpen] = useState<boolean>(false);
   const [isTruingOpen, setIsTruingOpen] = useState<boolean>(false);
   const [isImportOpen, setIsImportOpen] = useState<boolean>(false);
@@ -189,6 +197,7 @@ export const App: React.FC = () => {
         onToggleUnits={() => setIsMetric(!isMetric)}
         onOpenLadder={() => setIsLadderOpen(true)}
         onOpenCompare={() => setIsCompareOpen(true)}
+        onOpenPowderDB={() => setIsPowderDBOpen(true)}
         onOpenOBT={() => setIsOBTOpen(true)}
         onOpenTruing={() => setIsTruingOpen(true)}
         onOpenImport={() => setIsImportOpen(true)}
@@ -228,6 +237,7 @@ export const App: React.FC = () => {
             baOffsetPct={baOffsetPct}
             onChangeBaOffsetPct={setBaOffsetPct}
             isMetric={isMetric}
+            onOpenPowderDB={() => setIsPowderDBOpen(true)}
           />
         </section>
 
@@ -283,6 +293,14 @@ export const App: React.FC = () => {
           setChargeGrains(newCharge);
         }}
         isMetric={isMetric}
+      />
+
+      <PowderDatabaseModal
+        isOpen={isPowderDBOpen}
+        onClose={() => setIsPowderDBOpen(false)}
+        propellants={propellants}
+        activePropellant={propellant}
+        onSelectPropellant={(p) => setPropellant(p)}
       />
 
       <OBTModal

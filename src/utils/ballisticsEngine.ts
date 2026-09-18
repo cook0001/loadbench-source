@@ -273,8 +273,13 @@ export function rankPropellantsForLoad(
       }
     }
 
-    // Include viable loads with realistic loading density (40% to 115% compressed)
-    if (bestResult && bestResult.loading_density_pct <= 115 && bestResult.loading_density_pct >= 40) {
+    // Include all evaluated propellants with calculated safety & suitability status
+    if (bestResult) {
+      let status: SafetyStatus = bestResult.pressure_status;
+      if (bestResult.loading_density_pct > 105 || bestResult.loading_density_pct < 65 || bestResult.propellant_burnt_pct < 85) {
+        if (status === 'safe') status = 'caution';
+      }
+
       results.push({
         propellant_id: prop.id,
         propellant_name: prop.name,
@@ -285,7 +290,7 @@ export function rankPropellantsForLoad(
         fill_ratio_pct: bestResult.loading_density_pct,
         burn_pct: bestResult.propellant_burnt_pct,
         barrel_time_ms: bestResult.barrel_time_ms,
-        status: bestResult.pressure_status,
+        status,
       });
     }
   }

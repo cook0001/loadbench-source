@@ -8,7 +8,8 @@ import {
   Activity, 
   RotateCcw,
   Sparkles,
-  Search
+  Search,
+  Database
 } from 'lucide-react';
 import { CartridgeSpec } from '../../types/cartridge';
 
@@ -20,6 +21,7 @@ interface NavbarProps {
   onToggleUnits: () => void;
   onOpenLadder: () => void;
   onOpenCompare: () => void;
+  onOpenPowderDB: () => void;
   onOpenOBT: () => void;
   onOpenTruing: () => void;
   onOpenImport: () => void;
@@ -35,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleUnits,
   onOpenLadder,
   onOpenCompare,
+  onOpenPowderDB,
   onOpenOBT,
   onOpenTruing,
   onOpenImport,
@@ -113,6 +116,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <Search size={14} color="var(--accent-cyan)" />
           <span>Powder Compare</span>
+        </button>
+
+        <button
+          onClick={onOpenPowderDB}
+          style={navBtnStyle}
+          title="Browse All 180+ Propellants in Database"
+        >
+          <Database size={14} color="var(--accent-cyan)" />
+          <span>Powder Database</span>
         </button>
 
         <button
