@@ -39,6 +39,7 @@ import { PowderCompareModal } from './components/tools/PowderCompareModal';
 import { OBTModal } from './components/tools/OBTModal';
 import { ChronoTruingModal } from './components/tools/ChronoTruingModal';
 import { PowderDatabaseModal } from './components/tools/PowderDatabaseModal';
+import { ProjectileDatabaseModal } from './components/tools/ProjectileDatabaseModal';
 import { ManufacturerMatchModal } from './components/tools/ManufacturerMatchModal';
 import { RecoilModal } from './components/tools/RecoilModal';
 import { TrajectoryModal } from './components/tools/TrajectoryModal';
@@ -151,6 +152,7 @@ export const App: React.FC = () => {
   const [isLadderOpen, setIsLadderOpen] = useState<boolean>(false);
   const [isCompareOpen, setIsCompareOpen] = useState<boolean>(false);
   const [isPowderDBOpen, setIsPowderDBOpen] = useState<boolean>(false);
+  const [isProjectileDBOpen, setIsProjectileDBOpen] = useState<boolean>(false);
   const [isMatchOpen, setIsMatchOpen] = useState<boolean>(false);
   const [isOBTOpen, setIsOBTOpen] = useState<boolean>(false);
   const [isTruingOpen, setIsTruingOpen] = useState<boolean>(false);
@@ -392,6 +394,7 @@ export const App: React.FC = () => {
         onOpenLadder={() => setIsLadderOpen(true)}
         onOpenCompare={() => setIsCompareOpen(true)}
         onOpenPowderDB={() => setIsPowderDBOpen(true)}
+        onOpenProjectileDB={() => setIsProjectileDBOpen(true)}
         onOpenManufacturerMatch={() => setIsMatchOpen(true)}
         onOpenOBT={() => setIsOBTOpen(true)}
         onOpenTruing={() => setIsTruingOpen(true)}
@@ -436,6 +439,7 @@ export const App: React.FC = () => {
             usableChamberVolCm3={usableChamberVolCm3}
             muzzleVelocityFps={simulationResult.muzzle_velocity_fps}
             isMetric={isMetric}
+            onOpenProjectileDB={() => setIsProjectileDBOpen(true)}
           />
 
           <PropellantDeck
@@ -520,6 +524,21 @@ export const App: React.FC = () => {
         propellants={propellants}
         activePropellant={propellant}
         onSelectPropellant={(p) => setPropellant(p)}
+      />
+
+      <ProjectileDatabaseModal
+        isOpen={isProjectileDBOpen}
+        onClose={() => setIsProjectileDBOpen(false)}
+        projectiles={projectiles}
+        activeProjectile={projectile}
+        onSelectProjectile={(p) => {
+          setProjectile(p);
+          setSeatingDepth(p.default_seating_depth_in);
+        }}
+        cartridgeBulletDiaIn={cartridge.bullet_diameter_in}
+        barrelTwistInches={barrelTwistInches}
+        muzzleVelocityFps={simulationResult.muzzle_velocity_fps}
+        isMetric={isMetric}
       />
 
       <ManufacturerMatchModal

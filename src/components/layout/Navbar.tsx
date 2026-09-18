@@ -26,6 +26,7 @@ interface NavbarProps {
   onOpenLadder: () => void;
   onOpenCompare: () => void;
   onOpenPowderDB: () => void;
+  onOpenProjectileDB?: () => void;
   onOpenManufacturerMatch: () => void;
   onOpenOBT: () => void;
   onOpenTruing: () => void;
@@ -46,6 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenLadder,
   onOpenCompare,
   onOpenPowderDB,
+  onOpenProjectileDB,
   onOpenManufacturerMatch,
   onOpenOBT,
   onOpenTruing,
@@ -138,6 +140,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Database size={14} color="var(--accent-cyan)" />
           <span>Powder Database</span>
         </button>
+
+        {onOpenProjectileDB && (
+          <button
+            onClick={onOpenProjectileDB}
+            style={navBtnStyle}
+            title="Browse All 1,120+ Factory Projectiles in Database"
+          >
+            <Crosshair size={14} color="var(--accent-cyan)" />
+            <span>Bullet Database</span>
+          </button>
+        )}
 
         <button
           onClick={onOpenOBT}

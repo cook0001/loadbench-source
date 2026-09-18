@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Crosshair, Compass, ShieldCheck } from 'lucide-react';
+import { Crosshair, Compass, ShieldCheck, Database } from 'lucide-react';
 import { ProjectileSpec } from '../../types/projectile';
 import { calculateGyroscopicStability, StabilityResult } from '../../utils/stabilityEngine';
 
@@ -17,6 +17,7 @@ interface ProjectileDeckProps {
   usableChamberVolCm3: number;
   muzzleVelocityFps: number;
   isMetric: boolean;
+  onOpenProjectileDB?: () => void;
 }
 
 export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
@@ -33,14 +34,29 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
   usableChamberVolCm3,
   muzzleVelocityFps,
   isMetric,
+  onOpenProjectileDB,
 }) => {
   const [showAllCalibers, setShowAllCalibers] = useState<boolean>(false);
+  const [brandFilter, setBrandFilter] = useState<string>('all');
 
-  // Filter bullets matching the active cartridge diameter
-  const filteredProjectiles = useMemo(() => {
+  // Caliber-matched projectiles
+  const caliberProjectiles = useMemo(() => {
     if (showAllCalibers) return projectiles;
     return projectiles.filter(p => Math.abs(p.caliber_in - cartridgeBulletDiaIn) <= 0.006);
   }, [projectiles, cartridgeBulletDiaIn, showAllCalibers]);
+
+  // Available manufacturers in this caliber pool
+  const manufacturers = useMemo(() => {
+    const set = new Set<string>();
+    caliberProjectiles.forEach(p => set.add(p.manufacturer));
+    return Array.from(set).sort();
+  }, [caliberProjectiles]);
+
+  // Filter bullets matching manufacturer filter
+  const filteredProjectiles = useMemo(() => {
+    if (brandFilter === 'all') return caliberProjectiles;
+    return caliberProjectiles.filter(p => p.manufacturer === brandFilter);
+  }, [caliberProjectiles, brandFilter]);
 
   // Group by manufacturer
   const groupedProjectiles = useMemo(() => {
@@ -89,6 +105,34 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
             Net Vol: <strong>{usableChamberVolCm3.toFixed(2)} cm³</strong>
           </span>
         </div>
+      </div>
+
+      {/* Manufacturer Filter & Bullet DB launcher */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+        <div style={{ flex: 1 }}>
+          <label className="input-label" style={{ margin: 0, marginBottom: '2px' }}>Brand Filter</label>
+          <select
+            className="input-control"
+            value={brandFilter}
+            onChange={(e) => setBrandFilter(e.target.value)}
+          >
+            <option value="all">All Brands ({caliberProjectiles.length} in cal)</option>
+            {manufacturers.map(m => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        </div>
+        {onOpenProjectileDB && (
+          <button
+            onClick={onOpenProjectileDB}
+            className="btn-action"
+            style={{ alignSelf: 'flex-end', height: '28px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}
+            title="Browse Complete Projectile Database"
+          >
+            <Database size={12} />
+            <span>Bullet DB</span>
+          </button>
+        )}
       </div>
 
       {/* Bullet Selector with Manufacturer Grouping */}
