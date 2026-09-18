@@ -2,6 +2,7 @@ import { CartridgeSpec } from '../types/cartridge';
 import { ProjectileSpec } from '../types/projectile';
 import { PropellantSpec } from '../types/propellant';
 import { SimulationResult, SimulationStep, SafetyStatus, ChargeLadderStep, PropellantRankingItem } from '../types/ballistics';
+export type { SimulationResult, SimulationStep, SafetyStatus, ChargeLadderStep, PropellantRankingItem };
 import { barToPsi, mpsToFps, joulesToFtLbs } from './formatters';
 
 export interface BallisticsInput {

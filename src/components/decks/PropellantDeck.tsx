@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Flame, Sparkles, Database } from 'lucide-react';
+import { Flame, Sparkles, Database, BookOpen } from 'lucide-react';
 import { PropellantSpec } from '../../types/propellant';
 import { formatWeight } from '../../utils/formatters';
 
@@ -14,6 +14,7 @@ interface PropellantDeckProps {
   onChangeBaOffsetPct: (val: number) => void;
   isMetric: boolean;
   onOpenPowderDB?: () => void;
+  onOpenManufacturerMatch?: () => void;
 }
 
 export const PropellantDeck: React.FC<PropellantDeckProps> = ({
@@ -27,6 +28,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
   onChangeBaOffsetPct,
   isMetric,
   onOpenPowderDB,
+  onOpenManufacturerMatch,
 }) => {
   const [brandFilter, setBrandFilter] = useState<string>('all');
 
@@ -65,8 +67,8 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
           <Flame size={14} color="#f97316" style={{ flexShrink: 0 }} />
           <span>3. Propellant & Powder Charge</span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
-          Geometry: <strong>{propellant.grain_geometry}</strong>
+        <span style={{ fontSize: '10px', color: 'var(--text-muted)', flexShrink: 0 }}>
+          {propellant.chemical_base === 'double_base' ? 'Double-Base' : 'Single-Base'} &bull; {propellant.grain_geometry} {propellant.vmd_cc_gr ? `(${propellant.vmd_cc_gr} cc/gr)` : ''}
         </span>
       </div>
 
@@ -121,6 +123,30 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
               >
                 <Database size={11} />
                 <span>Viewer</span>
+              </button>
+            )}
+            {onOpenManufacturerMatch && (
+              <button
+                type="button"
+                onClick={onOpenManufacturerMatch}
+                title="Match & Reverse-Solve with Published Manufacturer Factory Data"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                  color: 'var(--status-safe)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  padding: '2px 6px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <BookOpen size={11} />
+                <span>Lab Match</span>
               </button>
             )}
           </div>

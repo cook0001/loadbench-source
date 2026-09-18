@@ -35,6 +35,7 @@ import { PowderCompareModal } from './components/tools/PowderCompareModal';
 import { OBTModal } from './components/tools/OBTModal';
 import { ChronoTruingModal } from './components/tools/ChronoTruingModal';
 import { PowderDatabaseModal } from './components/tools/PowderDatabaseModal';
+import { ManufacturerMatchModal } from './components/tools/ManufacturerMatchModal';
 import { ImportModal } from './components/modals/ImportModal';
 import { ExportReportModal } from './components/modals/ExportReportModal';
 
@@ -75,6 +76,7 @@ export const App: React.FC = () => {
   const [isLadderOpen, setIsLadderOpen] = useState<boolean>(false);
   const [isCompareOpen, setIsCompareOpen] = useState<boolean>(false);
   const [isPowderDBOpen, setIsPowderDBOpen] = useState<boolean>(false);
+  const [isMatchOpen, setIsMatchOpen] = useState<boolean>(false);
   const [isOBTOpen, setIsOBTOpen] = useState<boolean>(false);
   const [isTruingOpen, setIsTruingOpen] = useState<boolean>(false);
   const [isImportOpen, setIsImportOpen] = useState<boolean>(false);
@@ -198,6 +200,7 @@ export const App: React.FC = () => {
         onOpenLadder={() => setIsLadderOpen(true)}
         onOpenCompare={() => setIsCompareOpen(true)}
         onOpenPowderDB={() => setIsPowderDBOpen(true)}
+        onOpenManufacturerMatch={() => setIsMatchOpen(true)}
         onOpenOBT={() => setIsOBTOpen(true)}
         onOpenTruing={() => setIsTruingOpen(true)}
         onOpenImport={() => setIsImportOpen(true)}
@@ -238,6 +241,7 @@ export const App: React.FC = () => {
             onChangeBaOffsetPct={setBaOffsetPct}
             isMetric={isMetric}
             onOpenPowderDB={() => setIsPowderDBOpen(true)}
+            onOpenManufacturerMatch={() => setIsMatchOpen(true)}
           />
         </section>
 
@@ -301,6 +305,21 @@ export const App: React.FC = () => {
         propellants={propellants}
         activePropellant={propellant}
         onSelectPropellant={(p) => setPropellant(p)}
+      />
+
+      <ManufacturerMatchModal
+        isOpen={isMatchOpen}
+        onClose={() => setIsMatchOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        currentChargeGrains={chargeGrains}
+        currentBarrelLengthIn={barrelLength}
+        currentSeatingDepthIn={seatingDepth}
+        currentResult={simulationResult}
+        onApplyBaOffset={(offset) => setBaOffsetPct(offset)}
+        onApplyChargeWeight={(charge) => setChargeGrains(charge)}
+        isMetric={isMetric}
       />
 
       <OBTModal

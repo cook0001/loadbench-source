@@ -55,8 +55,8 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Database size={16} color="var(--accent-cyan)" />
-            <span style={{ fontSize: '13px', fontWeight: 600 }}>
-              Propellant Database Viewer ({propellants.length} Powders Loaded)
+            <span style={{ fontSize: '13px', fontWeight: 700 }}>
+              LoadBench Propellant Database ({propellants.length} Powders Loaded)
             </span>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)' }}>
@@ -272,7 +272,7 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
                 fontFamily: 'var(--font-mono)',
               }}>
                 <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700 }}>
-                  QuickLOAD Interior Ballistics Constants
+                  Interior Ballistics Thermochemical Constants
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
@@ -316,14 +316,62 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px' }}>
-                  <span style={{ color: 'var(--text-secondary)' }}>Form Factor (z0):</span>
-                  <strong>{inspectedPowder.progressivity_z0.toFixed(2)}</strong>
+                  <span style={{ color: 'var(--text-secondary)' }}>Form Factor (z0 / z1):</span>
+                  <strong>{inspectedPowder.progressivity_z0.toFixed(2)} / {inspectedPowder.progressivity_z1.toFixed(2)}</strong>
+                </div>
+              </div>
+
+              {/* Real-World Manufacturer Specifications Card */}
+              <div style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '6px',
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                fontSize: '11px',
+              }}>
+                <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--accent-cyan)', fontWeight: 700 }}>
+                  Real-World Manufacturer Specifications
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-secondary)' }}>Progressive Limit (z1):</span>
-                  <strong>{inspectedPowder.progressivity_z1.toFixed(2)}</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px', fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Volumetric Measure (VMD):</span>
+                  <strong>{inspectedPowder.vmd_cc_gr ?? (1 / (inspectedPowder.bulk_density_g_cm3 * 15.432358)).toFixed(4)} cc/gr</strong>
                 </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px', fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Chemical Base:</span>
+                  <span style={{ fontWeight: 600, color: inspectedPowder.chemical_base === 'double_base' ? 'var(--status-caution)' : 'var(--status-safe)' }}>
+                    {inspectedPowder.chemical_base === 'double_base' ? `Double-Base (${inspectedPowder.ng_content_pct || 12}% NG)` : 'Single-Base (100% NC)'}
+                  </span>
+                </div>
+
+                {inspectedPowder.reference_loads && inspectedPowder.reference_loads.length > 0 && (
+                  <div style={{ marginTop: '4px' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: 600 }}>
+                      VERIFIED LAB REFERENCE TEST POINT:
+                    </div>
+                    {inspectedPowder.reference_loads.map((ref, idx) => (
+                      <div key={idx} style={{
+                        backgroundColor: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '4px',
+                        padding: '6px 8px',
+                        fontSize: '10px',
+                        marginBottom: '4px',
+                      }}>
+                        <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                          {ref.cartridge_name} &bull; {ref.charge_grains} gr ➔ {ref.muzzle_velocity_fps} fps
+                        </div>
+                        <div style={{ color: 'var(--text-muted)' }}>
+                          {ref.bullet_weight_grains} gr {ref.bullet_name} | {ref.max_pressure_psi.toLocaleString()} psi ({ref.source})
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Informational Tip */}
@@ -340,7 +388,7 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
               }}>
                 <Info size={14} color="var(--accent-cyan)" style={{ flexShrink: 0, marginTop: '1px' }} />
                 <span>
-                  Burn Rate (Ba) dictates reaction speed under pressure. Progressivity factors model surface regression geometry (tubular, multi-perforated, spherical, flake) during combustion.
+                  Burn Rate (Ba) dictates combustion speed under pressure. VMD (Volume Measured Density) enables precise calibration with volumetric powder measures.
                 </span>
               </div>
             </div>

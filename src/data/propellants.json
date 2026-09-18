@@ -14,7 +14,10 @@
     "progressivity_z0": 0.92,
     "progressivity_z1": 0.78,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 3
+    "burn_chart_ranking": 3,
+    "vmd_cc_gr": 0.1062,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "hodgdon_clays",
@@ -31,7 +34,10 @@
     "progressivity_z0": 0.93,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 8
+    "burn_chart_ranking": 8,
+    "vmd_cc_gr": 0.1012,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "hodgdon_international_clays",
@@ -48,7 +54,10 @@
     "progressivity_z0": 0.94,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 11
+    "burn_chart_ranking": 11,
+    "vmd_cc_gr": 0.0939,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "hodgdon_titegroup",
@@ -65,7 +74,10 @@
     "progressivity_z0": 0.95,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 14
+    "burn_chart_ranking": 14,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "hodgdon_hp38",
@@ -82,7 +94,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 23
+    "burn_chart_ranking": 23,
+    "vmd_cc_gr": 0.0741,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_universal",
@@ -99,7 +114,10 @@
     "progressivity_z0": 0.96,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 26
+    "burn_chart_ranking": 26,
+    "vmd_cc_gr": 0.09,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "hodgdon_cfe_pistol",
@@ -116,7 +134,10 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 39
+    "burn_chart_ranking": 39,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_hs6",
@@ -133,7 +154,10 @@
     "progressivity_z0": 1.04,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 41
+    "burn_chart_ranking": 41,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_longshot",
@@ -150,7 +174,10 @@
     "progressivity_z0": 1.06,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 46
+    "burn_chart_ranking": 46,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h4227",
@@ -167,7 +194,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 54
+    "burn_chart_ranking": 54,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_lil_gun",
@@ -184,7 +214,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 59
+    "burn_chart_ranking": 59,
+    "vmd_cc_gr": 0.0675,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h4198",
@@ -201,7 +234,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 64
+    "burn_chart_ranking": 64,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_h322",
@@ -218,7 +254,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 73
+    "burn_chart_ranking": 73,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_benchmark",
@@ -235,7 +274,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 80
+    "burn_chart_ranking": 80,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_h335",
@@ -252,7 +294,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 85
+    "burn_chart_ranking": 85,
+    "vmd_cc_gr": 0.0665,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h4895",
@@ -269,7 +314,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 90
+    "burn_chart_ranking": 90,
+    "vmd_cc_gr": 0.0708,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_varget",
@@ -286,7 +334,32 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 99
+    "burn_chart_ranking": 99,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0,
+    "reference_loads": [
+      {
+        "cartridge_name": ".308 Winchester",
+        "bullet_name": "Sierra 168 gr HPBT MatchKing",
+        "bullet_weight_grains": 168,
+        "barrel_length_in": 24.0,
+        "charge_grains": 43.5,
+        "muzzle_velocity_fps": 2690,
+        "max_pressure_psi": 58800,
+        "source": "Hodgdon 2024 Annual Manual (SAAMI Spec Barrel)"
+      },
+      {
+        "cartridge_name": ".223 Remington",
+        "bullet_name": "Hornady 69 gr BTHP",
+        "bullet_weight_grains": 69,
+        "barrel_length_in": 24.0,
+        "charge_grains": 25.5,
+        "muzzle_velocity_fps": 2980,
+        "max_pressure_psi": 54200,
+        "source": "Hodgdon Reloading Data Center"
+      }
+    ]
   },
   {
     "id": "hodgdon_blc2",
@@ -303,7 +376,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 96
+    "burn_chart_ranking": 96,
+    "vmd_cc_gr": 0.0658,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_cfe_223",
@@ -320,7 +396,10 @@
     "progressivity_z0": 1.15,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 101
+    "burn_chart_ranking": 101,
+    "vmd_cc_gr": 0.0651,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_leverevolution",
@@ -337,7 +416,10 @@
     "progressivity_z0": 1.14,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 102
+    "burn_chart_ranking": 102,
+    "vmd_cc_gr": 0.0655,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h380",
@@ -354,7 +436,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 104
+    "burn_chart_ranking": 104,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h414",
@@ -371,7 +456,10 @@
     "progressivity_z0": 1.11,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 108
+    "burn_chart_ranking": 108,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h4350",
@@ -388,7 +476,32 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 110
+    "burn_chart_ranking": 110,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0,
+    "reference_loads": [
+      {
+        "cartridge_name": "6.5 Creedmoor",
+        "bullet_name": "Hornady 140 gr ELD Match",
+        "bullet_weight_grains": 140,
+        "barrel_length_in": 24.0,
+        "charge_grains": 41.5,
+        "muzzle_velocity_fps": 2715,
+        "max_pressure_psi": 58400,
+        "source": "Hodgdon 2024 Annual Manual (SAAMI Spec Barrel)"
+      },
+      {
+        "cartridge_name": ".30-06 Springfield",
+        "bullet_name": "Sierra 165 gr SBT",
+        "bullet_weight_grains": 165,
+        "barrel_length_in": 24.0,
+        "charge_grains": 58.0,
+        "muzzle_velocity_fps": 2840,
+        "max_pressure_psi": 57800,
+        "source": "Hodgdon Reloading Data Center"
+      }
+    ]
   },
   {
     "id": "hodgdon_hybrid_100v",
@@ -405,7 +518,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 114
+    "burn_chart_ranking": 114,
+    "vmd_cc_gr": 0.0728,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_superformance",
@@ -422,7 +538,10 @@
     "progressivity_z0": 1.16,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 120
+    "burn_chart_ranking": 120,
+    "vmd_cc_gr": 0.0655,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h4831",
@@ -439,7 +558,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 124
+    "burn_chart_ranking": 124,
+    "vmd_cc_gr": 0.0716,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_h4831sc",
@@ -456,7 +578,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 125
+    "burn_chart_ranking": 125,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_h1000",
@@ -473,7 +598,22 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 138
+    "burn_chart_ranking": 138,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0,
+    "reference_loads": [
+      {
+        "cartridge_name": ".300 Winchester Magnum",
+        "bullet_name": "Hornady 200 gr ELD-X",
+        "bullet_weight_grains": 200,
+        "barrel_length_in": 24.0,
+        "charge_grains": 77.0,
+        "muzzle_velocity_fps": 2855,
+        "max_pressure_psi": 61200,
+        "source": "Hodgdon Reloading Data Center"
+      }
+    ]
   },
   {
     "id": "hodgdon_retumbo",
@@ -490,7 +630,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 147
+    "burn_chart_ranking": 147,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "hodgdon_us869",
@@ -507,7 +650,10 @@
     "progressivity_z0": 1.15,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 164
+    "burn_chart_ranking": 164,
+    "vmd_cc_gr": 0.0642,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "hodgdon_h50bmg",
@@ -524,7 +670,10 @@
     "progressivity_z0": 1.2,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 168
+    "burn_chart_ranking": 168,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "alliant_bullseye",
@@ -541,7 +690,10 @@
     "progressivity_z0": 0.92,
     "progressivity_z1": 0.78,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 9
+    "burn_chart_ranking": 9,
+    "vmd_cc_gr": 0.0842,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_red_dot",
@@ -558,7 +710,10 @@
     "progressivity_z0": 0.92,
     "progressivity_z1": 0.78,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 10
+    "burn_chart_ranking": 10,
+    "vmd_cc_gr": 0.1062,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_green_dot",
@@ -575,7 +730,10 @@
     "progressivity_z0": 0.93,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 17
+    "burn_chart_ranking": 17,
+    "vmd_cc_gr": 0.0997,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_sport_pistol",
@@ -592,7 +750,10 @@
     "progressivity_z0": 0.93,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 15
+    "burn_chart_ranking": 15,
+    "vmd_cc_gr": 0.0864,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_unique",
@@ -609,7 +770,10 @@
     "progressivity_z0": 0.95,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 28
+    "burn_chart_ranking": 28,
+    "vmd_cc_gr": 0.0967,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_power_pistol",
@@ -626,7 +790,10 @@
     "progressivity_z0": 0.97,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 35
+    "burn_chart_ranking": 35,
+    "vmd_cc_gr": 0.079,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_be86",
@@ -643,7 +810,10 @@
     "progressivity_z0": 0.97,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 34
+    "burn_chart_ranking": 34,
+    "vmd_cc_gr": 0.0781,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_blue_dot",
@@ -660,7 +830,10 @@
     "progressivity_z0": 0.98,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 49
+    "burn_chart_ranking": 49,
+    "vmd_cc_gr": 0.082,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_2400",
@@ -677,7 +850,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 56
+    "burn_chart_ranking": 56,
+    "vmd_cc_gr": 0.0762,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_7",
@@ -694,7 +870,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 66
+    "burn_chart_ranking": 66,
+    "vmd_cc_gr": 0.0728,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_10x",
@@ -711,7 +890,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 77
+    "burn_chart_ranking": 77,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_ar_comp",
@@ -728,7 +910,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 97
+    "burn_chart_ranking": 97,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_15",
@@ -745,7 +930,22 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 98
+    "burn_chart_ranking": 98,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14,
+    "reference_loads": [
+      {
+        "cartridge_name": ".308 Winchester",
+        "bullet_name": "Sierra 175 gr HPBT MatchKing (M118LR)",
+        "bullet_weight_grains": 175,
+        "barrel_length_in": 24.0,
+        "charge_grains": 43.1,
+        "muzzle_velocity_fps": 2620,
+        "max_pressure_psi": 59100,
+        "source": "Alliant Powder Guide & US Army M118LR Spec"
+      }
+    ]
   },
   {
     "id": "alliant_reloder_16",
@@ -762,7 +962,22 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 109
+    "burn_chart_ranking": 109,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14,
+    "reference_loads": [
+      {
+        "cartridge_name": "6.5 Creedmoor",
+        "bullet_name": "Hornady 140 gr ELD Match",
+        "bullet_weight_grains": 140,
+        "barrel_length_in": 24.0,
+        "charge_grains": 42.0,
+        "muzzle_velocity_fps": 2740,
+        "max_pressure_psi": 60200,
+        "source": "Alliant Powder Guide 2024"
+      }
+    ]
   },
   {
     "id": "alliant_reloder_17",
@@ -779,7 +994,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 107
+    "burn_chart_ranking": 107,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_19",
@@ -796,7 +1014,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 121
+    "burn_chart_ranking": 121,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_22",
@@ -813,7 +1034,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 131
+    "burn_chart_ranking": 131,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_23",
@@ -830,7 +1054,10 @@
     "progressivity_z0": 1.04,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 126
+    "burn_chart_ranking": 126,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_25",
@@ -847,7 +1074,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 142
+    "burn_chart_ranking": 142,
+    "vmd_cc_gr": 0.0686,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_26",
@@ -864,7 +1094,22 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.89,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 140
+    "burn_chart_ranking": 140,
+    "vmd_cc_gr": 0.0661,
+    "chemical_base": "double_base",
+    "ng_content_pct": 22,
+    "reference_loads": [
+      {
+        "cartridge_name": "6.5 PRC",
+        "bullet_name": "Berger 156 gr EOL Elite Hunter",
+        "bullet_weight_grains": 156,
+        "barrel_length_in": 26.0,
+        "charge_grains": 55.2,
+        "muzzle_velocity_fps": 2930,
+        "max_pressure_psi": 63400,
+        "source": "Alliant Powder Guide"
+      }
+    ]
   },
   {
     "id": "alliant_reloder_33",
@@ -881,7 +1126,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 158
+    "burn_chart_ranking": 158,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_reloder_50",
@@ -898,7 +1146,10 @@
     "progressivity_z0": 1.2,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 170
+    "burn_chart_ranking": 170,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "double_base",
+    "ng_content_pct": 14
   },
   {
     "id": "alliant_pp_varmint",
@@ -915,7 +1166,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 84
+    "burn_chart_ranking": 84,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "alliant_pp_2000mr",
@@ -932,7 +1186,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 100
+    "burn_chart_ranking": 100,
+    "vmd_cc_gr": 0.0658,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "alliant_pp_4000mr",
@@ -949,7 +1206,10 @@
     "progressivity_z0": 1.15,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 118
+    "burn_chart_ranking": 118,
+    "vmd_cc_gr": 0.0655,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n310",
@@ -966,7 +1226,10 @@
     "progressivity_z0": 0.9,
     "progressivity_z1": 0.77,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 2
+    "burn_chart_ranking": 2,
+    "vmd_cc_gr": 0.1157,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "vihtavuori_n320",
@@ -983,7 +1246,10 @@
     "progressivity_z0": 0.92,
     "progressivity_z1": 0.79,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 13
+    "burn_chart_ranking": 13,
+    "vmd_cc_gr": 0.1178,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "vihtavuori_n330",
@@ -1000,7 +1266,10 @@
     "progressivity_z0": 0.94,
     "progressivity_z1": 0.81,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 24
+    "burn_chart_ranking": 24,
+    "vmd_cc_gr": 0.1045,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "vihtavuori_n340",
@@ -1017,7 +1286,10 @@
     "progressivity_z0": 0.95,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 31
+    "burn_chart_ranking": 31,
+    "vmd_cc_gr": 0.1045,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "vihtavuori_n350",
@@ -1034,7 +1306,10 @@
     "progressivity_z0": 0.96,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 40
+    "burn_chart_ranking": 40,
+    "vmd_cc_gr": 0.0982,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "vihtavuori_3n37",
@@ -1051,7 +1326,10 @@
     "progressivity_z0": 0.98,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 42
+    "burn_chart_ranking": 42,
+    "vmd_cc_gr": 0.09,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_3n38",
@@ -1068,7 +1346,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 51
+    "burn_chart_ranking": 51,
+    "vmd_cc_gr": 0.0888,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n105",
@@ -1085,7 +1366,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 53
+    "burn_chart_ranking": 53,
+    "vmd_cc_gr": 0.082,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n110",
@@ -1102,7 +1386,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 55
+    "burn_chart_ranking": 55,
+    "vmd_cc_gr": 0.08,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n120",
@@ -1119,7 +1406,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 68
+    "burn_chart_ranking": 68,
+    "vmd_cc_gr": 0.0753,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n130",
@@ -1136,7 +1426,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 74
+    "burn_chart_ranking": 74,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n133",
@@ -1153,7 +1446,22 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 79
+    "burn_chart_ranking": 79,
+    "vmd_cc_gr": 0.0728,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0,
+    "reference_loads": [
+      {
+        "cartridge_name": ".223 Remington",
+        "bullet_name": "Sierra 55 gr BlitzKing",
+        "bullet_weight_grains": 55,
+        "barrel_length_in": 24.0,
+        "charge_grains": 24.4,
+        "muzzle_velocity_fps": 3215,
+        "max_pressure_psi": 55400,
+        "source": "Vihtavuori Reloading Guide"
+      }
+    ]
   },
   {
     "id": "vihtavuori_n135",
@@ -1170,7 +1478,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 87
+    "burn_chart_ranking": 87,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n140",
@@ -1187,7 +1498,22 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 95
+    "burn_chart_ranking": 95,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0,
+    "reference_loads": [
+      {
+        "cartridge_name": ".308 Winchester",
+        "bullet_name": "Lapua 167 gr Scenar",
+        "bullet_weight_grains": 167,
+        "barrel_length_in": 24.0,
+        "charge_grains": 43.2,
+        "muzzle_velocity_fps": 2650,
+        "max_pressure_psi": 57900,
+        "source": "Vihtavuori Reloading Guide Ed. 2023 (CIP Barrel)"
+      }
+    ]
   },
   {
     "id": "vihtavuori_n150",
@@ -1204,7 +1530,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 105
+    "burn_chart_ranking": 105,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n160",
@@ -1221,7 +1550,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 122
+    "burn_chart_ranking": 122,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n165",
@@ -1238,7 +1570,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 139
+    "burn_chart_ranking": 139,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n170",
@@ -1255,7 +1590,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 152
+    "burn_chart_ranking": 152,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_24n41",
@@ -1272,7 +1610,10 @@
     "progressivity_z0": 1.18,
     "progressivity_z1": 0.89,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 161
+    "burn_chart_ranking": 161,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_20n29",
@@ -1289,7 +1630,10 @@
     "progressivity_z0": 1.2,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 169
+    "burn_chart_ranking": 169,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "vihtavuori_n530",
@@ -1306,7 +1650,10 @@
     "progressivity_z0": 1.06,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 83
+    "burn_chart_ranking": 83,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n540",
@@ -1323,7 +1670,10 @@
     "progressivity_z0": 1.07,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 97
+    "burn_chart_ranking": 97,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n550",
@@ -1340,7 +1690,22 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 107
+    "burn_chart_ranking": 107,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12,
+    "reference_loads": [
+      {
+        "cartridge_name": "6.5 Creedmoor",
+        "bullet_name": "Lapua 139 gr Scenar",
+        "bullet_weight_grains": 139,
+        "barrel_length_in": 24.0,
+        "charge_grains": 42.8,
+        "muzzle_velocity_fps": 2750,
+        "max_pressure_psi": 60500,
+        "source": "Vihtavuori Reloading Guide Ed. 2023"
+      }
+    ]
   },
   {
     "id": "vihtavuori_n555",
@@ -1357,7 +1722,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 109
+    "burn_chart_ranking": 109,
+    "vmd_cc_gr": 0.0686,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n560",
@@ -1374,7 +1742,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 135
+    "burn_chart_ranking": 135,
+    "vmd_cc_gr": 0.0686,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n565",
@@ -1391,7 +1762,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 143
+    "burn_chart_ranking": 143,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n568",
@@ -1408,7 +1782,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 146
+    "burn_chart_ranking": 146,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "vihtavuori_n570",
@@ -1425,7 +1802,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.89,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 150
+    "burn_chart_ranking": 150,
+    "vmd_cc_gr": 0.0675,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "imr_trail_boss",
@@ -1442,7 +1822,10 @@
     "progressivity_z0": 0.95,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 12
+    "burn_chart_ranking": 12,
+    "vmd_cc_gr": 0.1964,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "imr_4227",
@@ -1459,7 +1842,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 54
+    "burn_chart_ranking": 54,
+    "vmd_cc_gr": 0.0728,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4198",
@@ -1476,7 +1862,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 63
+    "burn_chart_ranking": 63,
+    "vmd_cc_gr": 0.0745,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_3031",
@@ -1493,7 +1882,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 76
+    "burn_chart_ranking": 76,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_8208_xbr",
@@ -1510,7 +1902,10 @@
     "progressivity_z0": 1.01,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 86
+    "burn_chart_ranking": 86,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4895",
@@ -1527,7 +1922,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 89
+    "burn_chart_ranking": 89,
+    "vmd_cc_gr": 0.0724,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4064",
@@ -1544,7 +1942,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 93
+    "burn_chart_ranking": 93,
+    "vmd_cc_gr": 0.0716,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4166",
@@ -1561,7 +1962,10 @@
     "progressivity_z0": 1.01,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 98
+    "burn_chart_ranking": 98,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4320",
@@ -1578,7 +1982,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 100
+    "burn_chart_ranking": 100,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4350",
@@ -1595,7 +2002,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 111
+    "burn_chart_ranking": 111,
+    "vmd_cc_gr": 0.0708,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4451",
@@ -1612,7 +2022,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 110
+    "burn_chart_ranking": 110,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4831",
@@ -1629,7 +2042,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 123
+    "burn_chart_ranking": 123,
+    "vmd_cc_gr": 0.0708,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_4955",
@@ -1646,7 +2062,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 129
+    "burn_chart_ranking": 129,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_7828",
@@ -1663,7 +2082,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 144
+    "burn_chart_ranking": 144,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_7828_ssc",
@@ -1680,7 +2102,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 145
+    "burn_chart_ranking": 145,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_7977",
@@ -1697,7 +2122,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 148
+    "burn_chart_ranking": 148,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "imr_8133",
@@ -1714,7 +2142,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 153
+    "burn_chart_ranking": 153,
+    "vmd_cc_gr": 0.0686,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "winchester_231",
@@ -1731,7 +2162,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 22
+    "burn_chart_ranking": 22,
+    "vmd_cc_gr": 0.0741,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_244",
@@ -1748,7 +2182,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 21
+    "burn_chart_ranking": 21,
+    "vmd_cc_gr": 0.0728,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_296",
@@ -1765,7 +2202,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 57
+    "burn_chart_ranking": 57,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_572",
@@ -1782,7 +2222,10 @@
     "progressivity_z0": 1.04,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 37
+    "burn_chart_ranking": 37,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_autocomp",
@@ -1799,7 +2242,10 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 33
+    "burn_chart_ranking": 33,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_748",
@@ -1816,7 +2262,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 94
+    "burn_chart_ranking": 94,
+    "vmd_cc_gr": 0.0658,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_760",
@@ -1833,7 +2282,10 @@
     "progressivity_z0": 1.11,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 108
+    "burn_chart_ranking": 108,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "winchester_staball_match",
@@ -1850,7 +2302,10 @@
     "progressivity_z0": 1.14,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 97
+    "burn_chart_ranking": 97,
+    "vmd_cc_gr": 0.0661,
+    "chemical_base": "double_base",
+    "ng_content_pct": 10
   },
   {
     "id": "winchester_staball_65",
@@ -1867,7 +2322,10 @@
     "progressivity_z0": 1.15,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 113
+    "burn_chart_ranking": 113,
+    "vmd_cc_gr": 0.0658,
+    "chemical_base": "double_base",
+    "ng_content_pct": 10
   },
   {
     "id": "winchester_staball_hd",
@@ -1884,7 +2342,10 @@
     "progressivity_z0": 1.16,
     "progressivity_z1": 0.89,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 149
+    "burn_chart_ranking": 149,
+    "vmd_cc_gr": 0.0655,
+    "chemical_base": "double_base",
+    "ng_content_pct": 10
   },
   {
     "id": "ramshot_zip",
@@ -1901,7 +2362,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 20
+    "burn_chart_ranking": 20,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_true_blue",
@@ -1918,7 +2382,10 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 32
+    "burn_chart_ranking": 32,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_silhouette",
@@ -1935,7 +2402,10 @@
     "progressivity_z0": 1.06,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 38
+    "burn_chart_ranking": 38,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_enforcer",
@@ -1952,7 +2422,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 53
+    "burn_chart_ranking": 53,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_x_terminator",
@@ -1969,7 +2442,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 78
+    "burn_chart_ranking": 78,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_tac",
@@ -1986,7 +2462,22 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 88
+    "burn_chart_ranking": 88,
+    "vmd_cc_gr": 0.0661,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12,
+    "reference_loads": [
+      {
+        "cartridge_name": ".223 Remington",
+        "bullet_name": "Sierra 55 gr GameKing",
+        "bullet_weight_grains": 55,
+        "barrel_length_in": 24.0,
+        "charge_grains": 25.5,
+        "muzzle_velocity_fps": 3240,
+        "max_pressure_psi": 54600,
+        "source": "Western Powders Reloading Guide Ed. 8.0"
+      }
+    ]
   },
   {
     "id": "ramshot_big_game",
@@ -2003,7 +2494,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 103
+    "burn_chart_ranking": 103,
+    "vmd_cc_gr": 0.0665,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_hunter",
@@ -2020,7 +2514,22 @@
     "progressivity_z0": 1.15,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 119
+    "burn_chart_ranking": 119,
+    "vmd_cc_gr": 0.0658,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12,
+    "reference_loads": [
+      {
+        "cartridge_name": "6.5 Creedmoor",
+        "bullet_name": "Nosler 140 gr Partition",
+        "bullet_weight_grains": 140,
+        "barrel_length_in": 24.0,
+        "charge_grains": 43.0,
+        "muzzle_velocity_fps": 2685,
+        "max_pressure_psi": 59400,
+        "source": "Western Powders Reloading Guide Ed. 8.0"
+      }
+    ]
   },
   {
     "id": "ramshot_magnum",
@@ -2037,7 +2546,10 @@
     "progressivity_z0": 1.16,
     "progressivity_z1": 0.89,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 143
+    "burn_chart_ranking": 143,
+    "vmd_cc_gr": 0.0651,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "ramshot_lrt",
@@ -2054,7 +2566,10 @@
     "progressivity_z0": 1.18,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 163
+    "burn_chart_ranking": 163,
+    "vmd_cc_gr": 0.0642,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_no_2",
@@ -2071,7 +2586,10 @@
     "progressivity_z0": 0.96,
     "progressivity_z1": 0.81,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 11
+    "burn_chart_ranking": 11,
+    "vmd_cc_gr": 0.0842,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_no_5",
@@ -2088,7 +2606,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 30
+    "burn_chart_ranking": 30,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_no_7",
@@ -2105,7 +2626,10 @@
     "progressivity_z0": 1.04,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 43
+    "burn_chart_ranking": 43,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_no_9",
@@ -2122,7 +2646,10 @@
     "progressivity_z0": 1.06,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 52
+    "burn_chart_ranking": 52,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_4100",
@@ -2139,7 +2666,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 57
+    "burn_chart_ranking": 57,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_5744",
@@ -2156,7 +2686,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 62
+    "burn_chart_ranking": 62,
+    "vmd_cc_gr": 0.0753,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "accurate_1680",
@@ -2173,7 +2706,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 70
+    "burn_chart_ranking": 70,
+    "vmd_cc_gr": 0.0675,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_2200",
@@ -2190,7 +2726,10 @@
     "progressivity_z0": 1.09,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 75
+    "burn_chart_ranking": 75,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_2015",
@@ -2207,7 +2746,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 78
+    "burn_chart_ranking": 78,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "accurate_2230",
@@ -2224,7 +2766,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 85
+    "burn_chart_ranking": 85,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_2460",
@@ -2241,7 +2786,10 @@
     "progressivity_z0": 1.11,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 92
+    "burn_chart_ranking": 92,
+    "vmd_cc_gr": 0.0665,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_2495",
@@ -2258,7 +2806,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 91
+    "burn_chart_ranking": 91,
+    "vmd_cc_gr": 0.0724,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "accurate_2520",
@@ -2275,7 +2826,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 96
+    "burn_chart_ranking": 96,
+    "vmd_cc_gr": 0.0658,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_4064",
@@ -2292,7 +2846,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 93
+    "burn_chart_ranking": 93,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "accurate_2700",
@@ -2309,7 +2866,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 110
+    "burn_chart_ranking": 110,
+    "vmd_cc_gr": 0.0661,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "accurate_4350",
@@ -2326,7 +2886,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 111
+    "burn_chart_ranking": 111,
+    "vmd_cc_gr": 0.0708,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "accurate_magpro",
@@ -2343,7 +2906,10 @@
     "progressivity_z0": 1.15,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 137
+    "burn_chart_ranking": 137,
+    "vmd_cc_gr": 0.0655,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "norma_200",
@@ -2360,7 +2926,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 71
+    "burn_chart_ranking": 71,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_201",
@@ -2377,7 +2946,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 81
+    "burn_chart_ranking": 81,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_202",
@@ -2394,7 +2966,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 93
+    "burn_chart_ranking": 93,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_203b",
@@ -2411,7 +2986,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 98
+    "burn_chart_ranking": 98,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_204",
@@ -2428,7 +3006,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 112
+    "burn_chart_ranking": 112,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_urp",
@@ -2445,7 +3026,10 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 111
+    "burn_chart_ranking": 111,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_mrp",
@@ -2462,7 +3046,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 141
+    "burn_chart_ranking": 141,
+    "vmd_cc_gr": 0.0686,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "norma_217",
@@ -2479,7 +3066,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 154
+    "burn_chart_ranking": 154,
+    "vmd_cc_gr": 0.0682,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "shooters_world_clean_shot",
@@ -2496,7 +3086,10 @@
     "progressivity_z0": 0.92,
     "progressivity_z1": 0.79,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 12
+    "burn_chart_ranking": 12,
+    "vmd_cc_gr": 0.1062,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "shooters_world_auto_pistol",
@@ -2513,7 +3106,10 @@
     "progressivity_z0": 1.02,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 29
+    "burn_chart_ranking": 29,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "shooters_world_major_pistol",
@@ -2530,7 +3126,10 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 44
+    "burn_chart_ranking": 44,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "shooters_world_blackout",
@@ -2547,7 +3146,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 69
+    "burn_chart_ranking": 69,
+    "vmd_cc_gr": 0.0675,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "shooters_world_tactical_rifle",
@@ -2564,7 +3166,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.86,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 87
+    "burn_chart_ranking": 87,
+    "vmd_cc_gr": 0.0665,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "shooters_world_match_rifle",
@@ -2581,7 +3186,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 96
+    "burn_chart_ranking": 96,
+    "vmd_cc_gr": 0.0661,
+    "chemical_base": "double_base",
+    "ng_content_pct": 12
   },
   {
     "id": "shooters_world_precision_rifle",
@@ -2598,7 +3206,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 97
+    "burn_chart_ranking": 97,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "shooters_world_long_rifle",
@@ -2615,7 +3226,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 115
+    "burn_chart_ranking": 115,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "shooters_world_sw4350",
@@ -2632,7 +3246,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 111
+    "burn_chart_ranking": 111,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "shooters_world_heavy_rifle",
@@ -2649,7 +3266,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 136
+    "burn_chart_ranking": 136,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "reload_swiss_rs12",
@@ -2666,7 +3286,10 @@
     "progressivity_z0": 0.91,
     "progressivity_z1": 0.78,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 7
+    "burn_chart_ranking": 7,
+    "vmd_cc_gr": 0.1117,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs20",
@@ -2683,7 +3306,10 @@
     "progressivity_z0": 0.93,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 25
+    "burn_chart_ranking": 25,
+    "vmd_cc_gr": 0.0997,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs24",
@@ -2700,7 +3326,10 @@
     "progressivity_z0": 0.97,
     "progressivity_z1": 0.83,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 50
+    "burn_chart_ranking": 50,
+    "vmd_cc_gr": 0.0876,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "reload_swiss_rs30",
@@ -2717,7 +3346,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 58
+    "burn_chart_ranking": 58,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "reload_swiss_rs40",
@@ -2734,7 +3366,10 @@
     "progressivity_z0": 1.05,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 82
+    "burn_chart_ranking": 82,
+    "vmd_cc_gr": 0.0704,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "reload_swiss_rs50",
@@ -2751,7 +3386,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 99
+    "burn_chart_ranking": 99,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs52",
@@ -2768,7 +3406,10 @@
     "progressivity_z0": 1.07,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 97
+    "burn_chart_ranking": 97,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs60",
@@ -2785,7 +3426,10 @@
     "progressivity_z0": 1.08,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 108
+    "burn_chart_ranking": 108,
+    "vmd_cc_gr": 0.0671,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs62",
@@ -2802,7 +3446,10 @@
     "progressivity_z0": 1.04,
     "progressivity_z1": 0.87,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 116
+    "burn_chart_ranking": 116,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs70",
@@ -2819,7 +3466,10 @@
     "progressivity_z0": 1.1,
     "progressivity_z1": 0.89,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 140
+    "burn_chart_ranking": 140,
+    "vmd_cc_gr": 0.0665,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs76",
@@ -2836,7 +3486,10 @@
     "progressivity_z0": 1.09,
     "progressivity_z1": 0.88,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 148
+    "burn_chart_ranking": 148,
+    "vmd_cc_gr": 0.0675,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "reload_swiss_rs80",
@@ -2853,7 +3506,10 @@
     "progressivity_z0": 1.12,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 159
+    "burn_chart_ranking": 159,
+    "vmd_cc_gr": 0.0668,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "adi_ap50n",
@@ -2870,7 +3526,10 @@
     "progressivity_z0": 0.93,
     "progressivity_z1": 0.8,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 11
+    "burn_chart_ranking": 11,
+    "vmd_cc_gr": 0.0939,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "adi_ap70n",
@@ -2887,7 +3546,10 @@
     "progressivity_z0": 0.95,
     "progressivity_z1": 0.82,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 28
+    "burn_chart_ranking": 28,
+    "vmd_cc_gr": 0.09,
+    "chemical_base": "double_base",
+    "ng_content_pct": 15
   },
   {
     "id": "adi_ar2205",
@@ -2904,7 +3566,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.84,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 54
+    "burn_chart_ranking": 54,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2207",
@@ -2921,7 +3586,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 65
+    "burn_chart_ranking": 65,
+    "vmd_cc_gr": 0.0736,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2219",
@@ -2938,7 +3606,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 77
+    "burn_chart_ranking": 77,
+    "vmd_cc_gr": 0.072,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_bm2",
@@ -2955,7 +3626,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 81
+    "burn_chart_ranking": 81,
+    "vmd_cc_gr": 0.0712,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2206h",
@@ -2972,7 +3646,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 90
+    "burn_chart_ranking": 90,
+    "vmd_cc_gr": 0.0708,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2208",
@@ -2989,7 +3666,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 99
+    "burn_chart_ranking": 99,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2209",
@@ -3006,7 +3686,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 110
+    "burn_chart_ranking": 110,
+    "vmd_cc_gr": 0.0701,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2213sc",
@@ -3023,7 +3706,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 125
+    "burn_chart_ranking": 125,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2217",
@@ -3040,7 +3726,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 138
+    "burn_chart_ranking": 138,
+    "vmd_cc_gr": 0.0697,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2225",
@@ -3057,7 +3746,10 @@
     "progressivity_z0": 1.0,
     "progressivity_z1": 0.85,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 147
+    "burn_chart_ranking": 147,
+    "vmd_cc_gr": 0.0693,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   },
   {
     "id": "adi_ar2218",
@@ -3074,6 +3766,9 @@
     "progressivity_z0": 1.2,
     "progressivity_z1": 0.9,
     "pressure_exponent_alpha": 1.0,
-    "burn_chart_ranking": 168
+    "burn_chart_ranking": 168,
+    "vmd_cc_gr": 0.0689,
+    "chemical_base": "single_base",
+    "ng_content_pct": 0
   }
 ]

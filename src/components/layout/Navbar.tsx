@@ -9,7 +9,8 @@ import {
   RotateCcw,
   Sparkles,
   Search,
-  Database
+  Database,
+  BookOpen
 } from 'lucide-react';
 import { CartridgeSpec } from '../../types/cartridge';
 
@@ -22,6 +23,7 @@ interface NavbarProps {
   onOpenLadder: () => void;
   onOpenCompare: () => void;
   onOpenPowderDB: () => void;
+  onOpenManufacturerMatch: () => void;
   onOpenOBT: () => void;
   onOpenTruing: () => void;
   onOpenImport: () => void;
@@ -38,6 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenLadder,
   onOpenCompare,
   onOpenPowderDB,
+  onOpenManufacturerMatch,
   onOpenOBT,
   onOpenTruing,
   onOpenImport,
@@ -60,11 +63,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Gauge size={20} color="var(--accent-cyan)" />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.5px' }}>
-              QuickLOAD <span style={{ color: 'var(--accent-cyan)' }}>Studio</span>
+            <span style={{ fontSize: '13px', fontWeight: 800, letterSpacing: '0.5px' }}>
+              Load<span style={{ color: 'var(--accent-cyan)' }}>Bench</span>
             </span>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-              Interior Ballistics Workbench
+            <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Interior Ballistics
             </span>
           </div>
         </div>
@@ -143,6 +146,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <Sparkles size={14} color="var(--accent-cyan)" />
           <span>Chrono Truing</span>
+        </button>
+
+        <button
+          onClick={onOpenManufacturerMatch}
+          style={navBtnStyle}
+          title="Match & Reverse-Solve with Published Manufacturer Factory Data"
+        >
+          <BookOpen size={14} color="var(--status-safe)" />
+          <span>Lab Match</span>
         </button>
 
         <div style={{ width: '1px', height: '18px', backgroundColor: 'var(--border-color)', margin: '0 4px' }} />
