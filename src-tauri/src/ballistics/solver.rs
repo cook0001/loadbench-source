@@ -22,6 +22,14 @@ pub struct NativeBallisticsInput {
     pub propellant_covolume_cm3_g: f64,
     pub propellant_solid_density_g_cm3: f64,
     pub propellant_bulk_density_g_cm3: f64,
+    #[serde(default)]
+    pub primer_brisance: Option<f64>,
+    #[serde(default)]
+    pub primer_initial_pressure_bar: Option<f64>,
+    #[serde(default)]
+    pub powder_temperature_f: Option<f64>,
+    #[serde(default)]
+    pub is_touching_lands: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -57,16 +65,28 @@ pub fn solve_interior_ballistics(input: &NativeBallisticsInput) -> NativeSimulat
     let powder_bulk_vol_cm3 = charge_mass_g / input.propellant_bulk_density_g_cm3;
     let loading_density_pct = (powder_bulk_vol_cm3 / usable_chamber_vol_cm3) * 100.0;
 
+    // Primer & Temperature compensation
+    let primer_brisance = input.primer_brisance.unwrap_or(1.0);
+    let primer_base_bar = input.primer_initial_pressure_bar.unwrap_or(45.0);
+    let primer_chamber_press_bar = primer_base_bar * (3.0 / usable_chamber_vol_cm3).powf(0.30);
+
+    let temp_f = input.powder_temperature_f.unwrap_or(70.0);
+    let temp_shift = 1.0 + 0.0005 * (temp_f - 70.0);
+    let effective_ba = input.propellant_ba * temp_shift;
+
     let force_constant_j_kg = input.propellant_force_j_g * 1000.0;
     let gamma = input.propellant_gamma;
     let covolume_m3_kg = input.propellant_covolume_cm3_g * 1e-3;
     let solid_density_kg_m3 = input.propellant_solid_density_g_cm3 * 1000.0;
-    let p0_pa = input.shot_start_pressure_bar * 1e5;
+
+    let mechanical_p0 = input.shot_start_pressure_bar + if input.is_touching_lands.unwrap_or(false) { 150.0 } else { 0.0 };
+    let effective_p0_bar = mechanical_p0 + (primer_chamber_press_bar * 0.25);
+    let p0_pa = effective_p0_bar * 1e5;
 
     let mut t = 0.0_f64;
     let mut x = 0.0_f64;
     let mut v = 0.0_f64;
-    let mut z = 0.008_f64;
+    let mut z = 0.008 * primer_brisance;
     let mut max_pressure_pa = 0.0_f64;
     let dt = 1.5e-6_f64;
 
@@ -89,7 +109,7 @@ pub fn solve_interior_ballistics(input: &NativeBallisticsInput) -> NativeSimulat
 
         let p_bar = p_pa / 1e5;
         if z < 1.0 {
-            let burn_rate = input.propellant_ba * p_bar.max(1.0);
+            let burn_rate = effective_ba * p_bar.max(1.0);
             z = (z + burn_rate * dt).min(1.0);
         }
 
@@ -162,6 +182,10 @@ mod tests {
             propellant_covolume_cm3_g: 0.940,
             propellant_solid_density_g_cm3: 1.58,
             propellant_bulk_density_g_cm3: 0.930,
+            primer_brisance: None,
+            primer_initial_pressure_bar: None,
+            powder_temperature_f: None,
+            is_touching_lands: None,
         };
 
         let res = solve_interior_ballistics(&input);

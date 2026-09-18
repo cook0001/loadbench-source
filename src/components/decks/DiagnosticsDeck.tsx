@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gauge, Zap, Wind, Timer, Flame } from 'lucide-react';
+import { Gauge, Zap, Wind, Timer, Flame, Shield, Compass } from 'lucide-react';
 import { SimulationResult } from '../../types/ballistics';
 import { formatPressure, formatVelocity, formatEnergy, formatLength } from '../../utils/formatters';
 
@@ -7,12 +7,22 @@ interface DiagnosticsDeckProps {
   result: SimulationResult;
   mapPressureBar: number;
   isMetric: boolean;
+  recoilEnergyFtLbs?: number;
+  recoilVelocityFps?: number;
+  stabilitySg?: number;
+  onOpenRecoil?: () => void;
+  onOpenTrajectory?: () => void;
 }
 
 export const DiagnosticsDeck: React.FC<DiagnosticsDeckProps> = ({
   result,
   mapPressureBar,
   isMetric,
+  recoilEnergyFtLbs,
+  recoilVelocityFps,
+  stabilitySg,
+  onOpenRecoil,
+  onOpenTrajectory,
 }) => {
   const getStatusClass = () => {
     switch (result.pressure_status) {
@@ -23,6 +33,21 @@ export const DiagnosticsDeck: React.FC<DiagnosticsDeckProps> = ({
       default:
         return 'status-safe';
     }
+  };
+
+  const getStabilityColor = (sg?: number) => {
+    if (!sg) return 'var(--text-secondary)';
+    if (sg >= 1.5) return 'var(--status-safe)';
+    if (sg >= 1.0) return 'var(--status-caution)';
+    return 'var(--status-danger)';
+  };
+
+  const getStabilityLabel = (sg?: number) => {
+    if (!sg) return 'Twist solver ready';
+    if (sg >= 1.5) return 'Optimum stability';
+    if (sg >= 1.3) return 'Fully stable';
+    if (sg >= 1.0) return 'Marginal stability';
+    return 'Unstable (Tumbling)';
   };
 
   return (
@@ -108,6 +133,44 @@ export const DiagnosticsDeck: React.FC<DiagnosticsDeckProps> = ({
         </div>
         <div className="diag-sub">
           Exit port pressure
+        </div>
+      </div>
+
+      {/* 7. Free Recoil Energy */}
+      <div 
+        className="diag-card" 
+        onClick={onOpenRecoil} 
+        style={{ cursor: onOpenRecoil ? 'pointer' : 'default', transition: 'border-color 0.15s' }}
+        title="Click to open Free Recoil Laboratory"
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span className="diag-title">Free Recoil</span>
+          <Shield size={14} color="var(--accent-amber)" />
+        </div>
+        <div className="diag-value" style={{ color: 'var(--accent-amber)' }}>
+          {recoilEnergyFtLbs !== undefined ? formatEnergy(recoilEnergyFtLbs, isMetric) : '--'}
+        </div>
+        <div className="diag-sub">
+          {recoilVelocityFps !== undefined ? `Vel: ${recoilVelocityFps.toFixed(1)} fps` : 'Recoil engine'}
+        </div>
+      </div>
+
+      {/* 8. Gyroscopic Stability Sg */}
+      <div 
+        className="diag-card" 
+        onClick={onOpenTrajectory} 
+        style={{ cursor: onOpenTrajectory ? 'pointer' : 'default', transition: 'border-color 0.15s' }}
+        title="Click to open Downrange Trajectory & Ballistics Table"
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span className="diag-title">Stability (Sg)</span>
+          <Compass size={14} color={getStabilityColor(stabilitySg)} />
+        </div>
+        <div className="diag-value" style={{ color: getStabilityColor(stabilitySg) }}>
+          {stabilitySg !== undefined ? `Sg ${stabilitySg.toFixed(2)}` : '--'}
+        </div>
+        <div className="diag-sub" style={{ color: getStabilityColor(stabilitySg) }}>
+          {getStabilityLabel(stabilitySg)}
         </div>
       </div>
     </div>

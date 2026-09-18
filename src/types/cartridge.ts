@@ -1,3 +1,5 @@
+import { PrimerPocketSize } from './primer';
+
 export interface CartridgeSpec {
   id: string;
   name: string;
@@ -15,4 +17,9 @@ export interface CartridgeSpec {
   default_barrel_length_in: number;
   rim_diameter_in?: number;
   base_diameter_in?: number;
+  default_primer_pocket?: PrimerPocketSize;
+  supported_primer_pockets?: PrimerPocketSize[];
+  default_primer_id?: string;
+  is_custom?: boolean;
 }
+

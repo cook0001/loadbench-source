@@ -10,6 +10,8 @@ interface PropellantDeckProps {
   chargeGrains: number;
   onChangeChargeGrains: (val: number) => void;
   loadingDensityPct: number;
+  powderTemperatureF: number;
+  onChangePowderTemperature: (temp: number) => void;
   baOffsetPct: number;
   onChangeBaOffsetPct: (val: number) => void;
   isMetric: boolean;
@@ -24,6 +26,8 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
   chargeGrains,
   onChangeChargeGrains,
   loadingDensityPct,
+  powderTemperatureF,
+  onChangePowderTemperature,
   baOffsetPct,
   onChangeBaOffsetPct,
   isMetric,
@@ -244,6 +248,49 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
             borderRadius: '3px',
             transition: 'width 0.15s ease',
           }} />
+        </div>
+      </div>
+
+      {/* Powder Temperature Sensitivity Slider */}
+      <div className="input-field" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px', gap: '6px' }}>
+          <label className="input-label" style={{ whiteSpace: 'nowrap' }}>
+            Powder Temperature
+          </label>
+          <span style={{
+            fontSize: '10px',
+            fontFamily: 'var(--font-mono)',
+            color: powderTemperatureF > 100 ? 'var(--status-danger)' : (powderTemperatureF < 32 ? 'var(--accent-blue)' : 'var(--text-muted)'),
+            whiteSpace: 'nowrap',
+            flexShrink: 0
+          }}>
+            {powderTemperatureF}°F {isMetric && `(${Math.round((powderTemperatureF - 32) * (5/9))}°C)`}
+            {powderTemperatureF > 100 && ' ⚠ HOT'}
+            {powderTemperatureF < 32 && ' ❄ COLD'}
+          </span>
+        </div>
+        <div className="slider-container">
+          <input
+            type="range"
+            min="-20"
+            max="140"
+            step="5"
+            className="range-slider"
+            value={powderTemperatureF}
+            onChange={(e) => onChangePowderTemperature(parseFloat(e.target.value))}
+          />
+          <button
+            onClick={() => onChangePowderTemperature(70)}
+            style={{
+              ...stepBtnStyle,
+              fontSize: '10px',
+              padding: '2px 6px',
+              flexShrink: 0
+            }}
+            title="Reset to 70°F standard"
+          >
+            70°F
+          </button>
         </div>
       </div>
 

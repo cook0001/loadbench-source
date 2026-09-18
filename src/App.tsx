@@ -5,13 +5,15 @@ import './App.css';
 import { CartridgeSpec } from './types/cartridge';
 import { ProjectileSpec } from './types/projectile';
 import { PropellantSpec } from './types/propellant';
+import { PrimerSpec, PrimerPocketSize } from './types/primer';
 
 // Preloaded Databases
 import initialCartridges from './data/cartridges.json';
 import initialPropellants from './data/propellants.json';
 import initialProjectiles from './data/projectiles.json';
+import initialPrimers from './data/primers.json';
 
-// Ballistics & Harmonics Engines
+// Ballistics, Harmonics & Tool Engines
 import { 
   simulateInteriorBallistics, 
   generateChargeLadder, 
@@ -19,6 +21,8 @@ import {
   calibrateBaForChronograph 
 } from './utils/ballisticsEngine';
 import { calculateOBTNodes } from './utils/obtEngine';
+import { calculateRecoilDynamics } from './utils/recoilEngine';
+import { calculateGyroscopicStability } from './utils/stabilityEngine';
 
 // Components
 import { Navbar } from './components/layout/Navbar';
@@ -36,32 +40,103 @@ import { OBTModal } from './components/tools/OBTModal';
 import { ChronoTruingModal } from './components/tools/ChronoTruingModal';
 import { PowderDatabaseModal } from './components/tools/PowderDatabaseModal';
 import { ManufacturerMatchModal } from './components/tools/ManufacturerMatchModal';
+import { RecoilModal } from './components/tools/RecoilModal';
+import { TrajectoryModal } from './components/tools/TrajectoryModal';
+import { BarrelLengthModal } from './components/tools/BarrelLengthModal';
+import { CaseWaterWeightModal } from './components/tools/CaseWaterWeightModal';
+import { CustomWildcatModal } from './components/tools/CustomWildcatModal';
 import { ImportModal } from './components/modals/ImportModal';
 import { ExportReportModal } from './components/modals/ExportReportModal';
 
 export const App: React.FC = () => {
   const leftPanelRef = useRef<HTMLElement | null>(null);
 
-  // Database Collections (useMemo ensures dynamic hot reload of full propellant catalog)
-  const [cartridges, setCartridges] = useState<CartridgeSpec[]>(initialCartridges as CartridgeSpec[]);
-  const [customPropellants] = useState<PropellantSpec[]>([]);
-  const propellants = useMemo<PropellantSpec[]>(() => {
-    return [...(initialPropellants as PropellantSpec[]), ...customPropellants];
-  }, [customPropellants]);
-  const [projectiles] = useState<ProjectileSpec[]>(initialProjectiles as ProjectileSpec[]);
+  // Persistent Custom Collections (localStorage)
+  const [customCartridges, setCustomCartridges] = useState<CartridgeSpec[]>(() => {
+    try {
+      const saved = localStorage.getItem('loadbench_custom_cartridges');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  // Active Selected Components (Default: 6.5 Creedmoor with 140 gr ELD-M and Hodgdon H4350)
-  const [cartridge, setCartridge] = useState<CartridgeSpec>(cartridges[0]);
-  const [projectile, setProjectile] = useState<ProjectileSpec>(projectiles[0]);
-  const defaultPropellant = useMemo(() => {
-    return (initialPropellants as PropellantSpec[]).find(p => p.id === 'hodgdon_h4350') || (initialPropellants[0] as PropellantSpec);
+  const [customPropellants, setCustomPropellants] = useState<PropellantSpec[]>(() => {
+    try {
+      const saved = localStorage.getItem('loadbench_custom_propellants');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [customProjectiles, setCustomProjectiles] = useState<ProjectileSpec[]>(() => {
+    try {
+      const saved = localStorage.getItem('loadbench_custom_projectiles');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Aggregated Catalogs
+  const cartridges = useMemo<CartridgeSpec[]>(() => {
+    return [...customCartridges, ...(initialCartridges as CartridgeSpec[])];
+  }, [customCartridges]);
+
+  const propellants = useMemo<PropellantSpec[]>(() => {
+    return [...customPropellants, ...(initialPropellants as PropellantSpec[])];
+  }, [customPropellants]);
+
+  const projectiles = useMemo<ProjectileSpec[]>(() => {
+    return [...customProjectiles, ...(initialProjectiles as ProjectileSpec[])];
+  }, [customProjectiles]);
+
+  const [primers] = useState<PrimerSpec[]>(initialPrimers as PrimerSpec[]);
+
+  // Default Selected Components (6.5 Creedmoor with 140 gr ELD-M and Hodgdon H4350)
+  const initialDefaultCartridge = useMemo(() => {
+    return (
+      (initialCartridges as CartridgeSpec[]).find(c => c.id === '65_creedmoor') ||
+      (initialCartridges as CartridgeSpec[])[0]
+    );
   }, []);
-  const [propellant, setPropellant] = useState<PropellantSpec>(defaultPropellant);
+
+  const initialDefaultProjectile = useMemo(() => {
+    return (
+      (initialProjectiles as ProjectileSpec[]).find(p => p.id === 'hornady_65_eldm_140') ||
+      (initialProjectiles as ProjectileSpec[])[0]
+    );
+  }, []);
+
+  const initialDefaultPropellant = useMemo(() => {
+    return (
+      (initialPropellants as PropellantSpec[]).find(p => p.id === 'hodgdon_h4350') ||
+      (initialPropellants[0] as PropellantSpec)
+    );
+  }, []);
+
+  const [cartridge, setCartridge] = useState<CartridgeSpec>(initialDefaultCartridge);
+  const [projectile, setProjectile] = useState<ProjectileSpec>(initialDefaultProjectile);
+  const [propellant, setPropellant] = useState<PropellantSpec>(initialDefaultPropellant);
+
+  // Primer State
+  const [selectedPrimerPocket, setSelectedPrimerPocket] = useState<PrimerPocketSize>(
+    initialDefaultCartridge.default_primer_pocket || 'large_rifle'
+  );
+
+  const [selectedPrimer, setSelectedPrimer] = useState<PrimerSpec>(() => {
+    const def = (initialPrimers as PrimerSpec[]).find(p => p.id === initialDefaultCartridge.default_primer_id);
+    return def || (initialPrimers as PrimerSpec[]).find(p => p.pocket_size === (initialDefaultCartridge.default_primer_pocket || 'large_rifle')) || (initialPrimers[0] as PrimerSpec);
+  });
 
   // Load Parameters
   const [chargeGrains, setChargeGrains] = useState<number>(41.5);
-  const [barrelLength, setBarrelLength] = useState<number>(cartridges[0].default_barrel_length_in);
-  const [seatingDepth, setSeatingDepth] = useState<number>(projectiles[0].default_seating_depth_in);
+  const [barrelLength, setBarrelLength] = useState<number>(initialDefaultCartridge.default_barrel_length_in);
+  const [seatingDepth, setSeatingDepth] = useState<number>(initialDefaultProjectile.default_seating_depth_in);
+  const [barrelTwistInches, setBarrelTwistInches] = useState<number>(8.0);
+  const [powderTemperatureF, setPowderTemperatureF] = useState<number>(70);
+  const [isTouchingLands, setIsTouchingLands] = useState<boolean>(false);
   const [baOffsetPct, setBaOffsetPct] = useState<number>(0);
   const [isMetric, setIsMetric] = useState<boolean>(false);
 
@@ -79,6 +154,11 @@ export const App: React.FC = () => {
   const [isMatchOpen, setIsMatchOpen] = useState<boolean>(false);
   const [isOBTOpen, setIsOBTOpen] = useState<boolean>(false);
   const [isTruingOpen, setIsTruingOpen] = useState<boolean>(false);
+  const [isRecoilOpen, setIsRecoilOpen] = useState<boolean>(false);
+  const [isTrajectoryOpen, setIsTrajectoryOpen] = useState<boolean>(false);
+  const [isBarrelStepperOpen, setIsBarrelStepperOpen] = useState<boolean>(false);
+  const [isCaseWaterOpen, setIsCaseWaterOpen] = useState<boolean>(false);
+  const [isWildcatOpen, setIsWildcatOpen] = useState<boolean>(false);
   const [isImportOpen, setIsImportOpen] = useState<boolean>(false);
   const [isExportOpen, setIsExportOpen] = useState<boolean>(false);
 
@@ -87,11 +167,29 @@ export const App: React.FC = () => {
     setCartridge(newCartridge);
     setBarrelLength(newCartridge.default_barrel_length_in);
 
+    // Auto-sync primer pocket & primer
+    const pocket = newCartridge.default_primer_pocket || 'large_rifle';
+    setSelectedPrimerPocket(pocket);
+    const matchingPrimer = 
+      primers.find(p => p.id === newCartridge.default_primer_id) || 
+      primers.find(p => p.pocket_size === pocket) || 
+      primers[0];
+    setSelectedPrimer(matchingPrimer);
+
     // Auto-select matching caliber bullet if available
     const matchingProj = projectiles.find(p => Math.abs(p.caliber_in - newCartridge.bullet_diameter_in) < 0.005);
     if (matchingProj) {
       setProjectile(matchingProj);
       setSeatingDepth(matchingProj.default_seating_depth_in);
+    }
+  };
+
+  // Primer Pocket Switcher Handler
+  const handleChangePrimerPocket = (pocket: PrimerPocketSize) => {
+    setSelectedPrimerPocket(pocket);
+    const available = primers.filter(p => p.pocket_size === pocket);
+    if (available.length > 0) {
+      setSelectedPrimer(available[0]);
     }
   };
 
@@ -104,7 +202,7 @@ export const App: React.FC = () => {
     return Math.max(0.1, grossCaseCm3 - seatedBulletVolCm3);
   }, [cartridge, seatingDepth]);
 
-  // Main Simulation Solve
+  // Main Interior Ballistics Simulation Solve
   const { simulationResult, solveTimeMs } = useMemo(() => {
     const start = performance.now();
     const result = simulateInteriorBallistics({
@@ -116,10 +214,35 @@ export const App: React.FC = () => {
       seatingDepthInches: seatingDepth,
       shotStartPressureBar: projectile.shot_start_pressure_bar,
       baOffsetPct,
+      primer: selectedPrimer,
+      powderTemperatureF,
+      isTouchingLands,
     });
     const duration = performance.now() - start;
     return { simulationResult: result, solveTimeMs: duration };
-  }, [cartridge, projectile, propellant, chargeGrains, barrelLength, seatingDepth, baOffsetPct]);
+  }, [cartridge, projectile, propellant, chargeGrains, barrelLength, seatingDepth, baOffsetPct, selectedPrimer, powderTemperatureF, isTouchingLands]);
+
+  // Live Recoil Dynamics
+  const recoilResult = useMemo(() => {
+    return calculateRecoilDynamics({
+      bulletWeightGrains: projectile.weight_grains,
+      powderChargeGrains: chargeGrains,
+      muzzleVelocityFps: simulationResult.muzzle_velocity_fps,
+      rifleWeightLbs: 9.5,
+    });
+  }, [projectile.weight_grains, chargeGrains, simulationResult.muzzle_velocity_fps]);
+
+  // Live Gyroscopic Stability Sg
+  const stabilityResult = useMemo(() => {
+    return calculateGyroscopicStability({
+      bulletDiameterInches: projectile.caliber_in,
+      bulletWeightGrains: projectile.weight_grains,
+      bulletLengthInches: projectile.length_in,
+      barrelTwistInches,
+      muzzleVelocityFps: simulationResult.muzzle_velocity_fps,
+      temperatureF: powderTemperatureF,
+    });
+  }, [projectile.caliber_in, projectile.weight_grains, projectile.length_in, barrelTwistInches, simulationResult.muzzle_velocity_fps, powderTemperatureF]);
 
   // OBT Harmonics Nodes
   const obtNodes = useMemo(() => {
@@ -138,8 +261,11 @@ export const App: React.FC = () => {
       seatingDepthInches: seatingDepth,
       shotStartPressureBar: projectile.shot_start_pressure_bar,
       baOffsetPct,
+      primer: selectedPrimer,
+      powderTemperatureF,
+      isTouchingLands,
     });
-  }, [isLadderOpen, cartridge, projectile, propellant, chargeGrains, barrelLength, seatingDepth, baOffsetPct]);
+  }, [isLadderOpen, cartridge, projectile, propellant, chargeGrains, barrelLength, seatingDepth, baOffsetPct, selectedPrimer, powderTemperatureF, isTouchingLands]);
 
   // Propellant Ranking Matrix Calculation
   const propellantRanking = useMemo(() => {
@@ -152,10 +278,13 @@ export const App: React.FC = () => {
         seatingDepthInches: seatingDepth,
         shotStartPressureBar: projectile.shot_start_pressure_bar,
         baOffsetPct: 0,
+        primer: selectedPrimer,
+        powderTemperatureF,
+        isTouchingLands,
       },
       propellants
     );
-  }, [isCompareOpen, cartridge, projectile, barrelLength, seatingDepth, propellants]);
+  }, [isCompareOpen, cartridge, projectile, barrelLength, seatingDepth, propellants, selectedPrimer, powderTemperatureF, isTouchingLands]);
 
   // Chronograph Calibration Helper
   const handleCalibrateBa = (measuredFps: number) => {
@@ -169,6 +298,9 @@ export const App: React.FC = () => {
         seatingDepthInches: seatingDepth,
         shotStartPressureBar: projectile.shot_start_pressure_bar,
         baOffsetPct,
+        primer: selectedPrimer,
+        powderTemperatureF,
+        isTouchingLands,
       },
       measuredFps
     );
@@ -179,13 +311,73 @@ export const App: React.FC = () => {
     setChargeGrains(41.5);
     setBarrelLength(cartridge.default_barrel_length_in);
     setSeatingDepth(projectile.default_seating_depth_in);
+    setBarrelTwistInches(8.0);
+    setPowderTemperatureF(70);
+    setIsTouchingLands(false);
     setBaOffsetPct(0);
   };
 
-  // Import handler for .qdf / .vol
+  // Custom Wildcat Saved Handler
+  const handleSaveCustomWildcat = (newWildcat: CartridgeSpec) => {
+    setCustomCartridges(prev => {
+      const updated = [newWildcat, ...prev.filter(c => c.id !== newWildcat.id)];
+      try {
+        localStorage.setItem('loadbench_custom_cartridges', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to persist custom wildcats:', e);
+      }
+      return updated;
+    });
+    handleSelectCartridge(newWildcat);
+  };
+
+  // Import Handler (.qdf / .vol / .pro / .bul)
   const handleImportCartridge = (imported: CartridgeSpec) => {
-    setCartridges(prev => [imported, ...prev.filter(c => c.id !== imported.id)]);
-    handleSelectCartridge(imported);
+    handleSaveCustomWildcat(imported);
+  };
+
+  const handleImportPropellants = (imported: PropellantSpec[]) => {
+    setCustomPropellants(prev => {
+      const map = new Map<string, PropellantSpec>();
+      prev.forEach(p => map.set(p.id, p));
+      imported.forEach(p => map.set(p.id, p));
+      const updated = Array.from(map.values());
+      try {
+        localStorage.setItem('loadbench_custom_propellants', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to persist custom propellants:', e);
+      }
+      return updated;
+    });
+    if (imported.length > 0) {
+      setPropellant(imported[0]);
+    }
+  };
+
+  const handleImportProjectiles = (imported: ProjectileSpec[]) => {
+    setCustomProjectiles(prev => {
+      const map = new Map<string, ProjectileSpec>();
+      prev.forEach(p => map.set(p.id, p));
+      imported.forEach(p => map.set(p.id, p));
+      const updated = Array.from(map.values());
+      try {
+        localStorage.setItem('loadbench_custom_projectiles', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to persist custom projectiles:', e);
+      }
+      return updated;
+    });
+    if (imported.length > 0) {
+      setProjectile(imported[0]);
+    }
+  };
+
+  // Case Water Capacity Calibrated Handler
+  const handleApplyCaseWaterCapacity = (capacityGrH2O: number) => {
+    setCartridge(prev => ({
+      ...prev,
+      overflow_capacity_gr_h2o: capacityGrH2O,
+    }));
   };
 
   return (
@@ -203,6 +395,9 @@ export const App: React.FC = () => {
         onOpenManufacturerMatch={() => setIsMatchOpen(true)}
         onOpenOBT={() => setIsOBTOpen(true)}
         onOpenTruing={() => setIsTruingOpen(true)}
+        onOpenTrajectory={() => setIsTrajectoryOpen(true)}
+        onOpenRecoil={() => setIsRecoilOpen(true)}
+        onOpenBarrelStepper={() => setIsBarrelStepperOpen(true)}
         onOpenImport={() => setIsImportOpen(true)}
         onOpenExport={() => setIsExportOpen(true)}
         onResetToDefaults={handleResetToDefaults}
@@ -217,6 +412,13 @@ export const App: React.FC = () => {
             onChangeCartridge={setCartridge}
             barrelLength={barrelLength}
             onChangeBarrelLength={setBarrelLength}
+            selectedPrimerPocket={selectedPrimerPocket}
+            onChangePrimerPocket={handleChangePrimerPocket}
+            selectedPrimer={selectedPrimer}
+            onChangePrimer={setSelectedPrimer}
+            primers={primers}
+            onOpenCaseWaterModal={() => setIsCaseWaterOpen(true)}
+            onOpenWildcatModal={() => setIsWildcatOpen(true)}
             isMetric={isMetric}
           />
 
@@ -226,7 +428,13 @@ export const App: React.FC = () => {
             onChangeProjectile={setProjectile}
             seatingDepth={seatingDepth}
             onChangeSeatingDepth={setSeatingDepth}
+            barrelTwistInches={barrelTwistInches}
+            onChangeBarrelTwist={setBarrelTwistInches}
+            isTouchingLands={isTouchingLands}
+            onChangeTouchingLands={setIsTouchingLands}
+            cartridgeBulletDiaIn={cartridge.bullet_diameter_in}
             usableChamberVolCm3={usableChamberVolCm3}
+            muzzleVelocityFps={simulationResult.muzzle_velocity_fps}
             isMetric={isMetric}
           />
 
@@ -237,6 +445,8 @@ export const App: React.FC = () => {
             chargeGrains={chargeGrains}
             onChangeChargeGrains={setChargeGrains}
             loadingDensityPct={simulationResult.loading_density_pct}
+            powderTemperatureF={powderTemperatureF}
+            onChangePowderTemperature={setPowderTemperatureF}
             baOffsetPct={baOffsetPct}
             onChangeBaOffsetPct={setBaOffsetPct}
             isMetric={isMetric}
@@ -251,6 +461,11 @@ export const App: React.FC = () => {
             result={simulationResult}
             mapPressureBar={cartridge.max_pressure_bar}
             isMetric={isMetric}
+            recoilEnergyFtLbs={recoilResult.recoilEnergyFtLbs}
+            recoilVelocityFps={recoilResult.recoilVelocityFps}
+            stabilitySg={stabilityResult.sg}
+            onOpenRecoil={() => setIsRecoilOpen(true)}
+            onOpenTrajectory={() => setIsTrajectoryOpen(true)}
           />
 
           <BallisticsChart
@@ -339,10 +554,76 @@ export const App: React.FC = () => {
         onCalibrateBa={handleCalibrateBa}
       />
 
+      <RecoilModal
+        isOpen={isRecoilOpen}
+        onClose={() => setIsRecoilOpen(false)}
+        bulletWeightGrains={projectile.weight_grains}
+        chargeGrains={chargeGrains}
+        muzzleVelocityFps={simulationResult.muzzle_velocity_fps}
+        cartridgeName={cartridge.name}
+        isMetric={isMetric}
+      />
+
+      <TrajectoryModal
+        isOpen={isTrajectoryOpen}
+        onClose={() => setIsTrajectoryOpen(false)}
+        muzzleVelocityFps={simulationResult.muzzle_velocity_fps}
+        bulletWeightGrains={projectile.weight_grains}
+        bcG1={projectile.bc_g1}
+        bcG7={projectile.bc_g7}
+        projectileName={projectile.name}
+        cartridgeName={cartridge.name}
+        isMetric={isMetric}
+      />
+
+      <BarrelLengthModal
+        isOpen={isBarrelStepperOpen}
+        onClose={() => setIsBarrelStepperOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        currentBarrelLengthInches={barrelLength}
+        seatingDepthInches={seatingDepth}
+        primer={selectedPrimer}
+        powderTemperatureF={powderTemperatureF}
+        isTouchingLands={isTouchingLands}
+        baOffsetPct={baOffsetPct}
+        onApplyBarrelLength={(len) => {
+          setBarrelLength(len);
+          setIsBarrelStepperOpen(false);
+        }}
+        isMetric={isMetric}
+      />
+
+      <CaseWaterWeightModal
+        isOpen={isCaseWaterOpen}
+        onClose={() => setIsCaseWaterOpen(false)}
+        nominalCapacityGrH2O={cartridge.overflow_capacity_gr_h2o}
+        cartridgeName={cartridge.name}
+        onApplyCapacity={(cap) => {
+          handleApplyCaseWaterCapacity(cap);
+          setIsCaseWaterOpen(false);
+        }}
+        isMetric={isMetric}
+      />
+
+      <CustomWildcatModal
+        isOpen={isWildcatOpen}
+        onClose={() => setIsWildcatOpen(false)}
+        onSaveWildcat={(w) => {
+          handleSaveCustomWildcat(w);
+          setIsWildcatOpen(false);
+        }}
+        isMetric={isMetric}
+      />
+
       <ImportModal
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         onImportCartridge={handleImportCartridge}
+        onImportPropellants={handleImportPropellants}
+        onImportProjectiles={handleImportProjectiles}
       />
 
       <ExportReportModal

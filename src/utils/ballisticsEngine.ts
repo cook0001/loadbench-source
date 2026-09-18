@@ -5,6 +5,8 @@ import { SimulationResult, SimulationStep, SafetyStatus, ChargeLadderStep, Prope
 export type { SimulationResult, SimulationStep, SafetyStatus, ChargeLadderStep, PropellantRankingItem };
 import { barToPsi, mpsToFps, joulesToFtLbs } from './formatters';
 
+import { PrimerSpec } from '../types/primer';
+
 export interface BallisticsInput {
   cartridge: CartridgeSpec;
   projectile: ProjectileSpec;
@@ -14,6 +16,9 @@ export interface BallisticsInput {
   seatingDepthInches: number;
   shotStartPressureBar: number;
   baOffsetPct?: number; // User calibration offset (-10% to +10%)
+  primer?: PrimerSpec;
+  powderTemperatureF?: number; // default 70°F
+  isTouchingLands?: boolean;   // default false (adds +150 bar engraving spike)
 }
 
 /**
@@ -29,6 +34,9 @@ export function simulateInteriorBallistics(input: BallisticsInput): SimulationRe
     seatingDepthInches,
     shotStartPressureBar,
     baOffsetPct = 0,
+    primer,
+    powderTemperatureF = 70,
+    isTouchingLands = false,
   } = input;
 
   // Geometry & Masses
@@ -51,20 +59,36 @@ export function simulateInteriorBallistics(input: BallisticsInput): SimulationRe
   const powderBulkVolCm3 = chargeMassG / propellant.bulk_density_g_cm3;
   const loadingDensityPct = (powderBulkVolCm3 / usableChamberVolCm3) * 100;
 
+  // Primer & Temperature Adjustments
+  const primerBrisance = primer?.brisance_rating ?? 1.0;
+  const primerBaseBar = primer?.initial_pressure_bar ?? 45.0;
+  
+  // Chamber pre-pressurization scaled by chamber volume (reference: 3.0 cm³)
+  const primerChamberPressBar = primerBaseBar * Math.pow(3.0 / usableChamberVolCm3, 0.30);
+  
+  // Temperature coefficient shift
+  const isSingleBase = propellant.chemical_base === 'single_base';
+  const betaTemp = isSingleBase ? 0.0003 : 0.0007; // 1/°F
+  const tempShiftFactor = 1.0 + betaTemp * (powderTemperatureF - 70);
+
   // Propellant Thermochemical Constants
-  const effectiveBa = propellant.burn_rate_ba * (1 + baOffsetPct / 100);
+  const effectiveBa = propellant.burn_rate_ba * (1 + baOffsetPct / 100) * tempShiftFactor;
   const forceConstantJ_Kg = propellant.force_constant_j_g * 1000;
   const gamma = propellant.ratio_specific_heats;
   const covolumeM3_Kg = propellant.co_volume_cm3_g * 1e-3;
   const solidDensityKg_M3 = propellant.solid_density_g_cm3 * 1000;
-  const p0Pa = shotStartPressureBar * 1e5;
+
+  // Mechanical Shot Start Resistance + Jammed lands spike + Primer Pre-Impulse
+  const mechanicalP0Bar = shotStartPressureBar + (isTouchingLands ? 150 : 0);
+  const effectiveP0Bar = mechanicalP0Bar + (primerChamberPressBar * 0.25);
+  const p0Pa = effectiveP0Bar * 1e5;
 
   // Simulation State Variables
   let t = 0; // seconds
   let x = 0; // bullet travel (meters)
   let v = 0; // bullet velocity (m/s)
-  let z = 0.008; // fraction of propellant burnt (initial primer flash)
-  let pPa = 30e5; // initial chamber pressure ~30 bar
+  let z = 0.008 * primerBrisance; // fraction of propellant burnt (initial primer flash)
+  let pPa = primerChamberPressBar * 1e5; // initial chamber pressure from primer
 
   let maxPressurePa = 0;
   let maxPressureTravelM = 0;

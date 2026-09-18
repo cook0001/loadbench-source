@@ -1,6 +1,7 @@
 import React from 'react';
-import { Target } from 'lucide-react';
+import { Target, Droplets, Sparkles, ShieldAlert, Zap } from 'lucide-react';
 import { CartridgeSpec } from '../../types/cartridge';
+import { PrimerSpec, PrimerPocketSize } from '../../types/primer';
 import { formatLength } from '../../utils/formatters';
 
 interface CartridgeDeckProps {
@@ -8,6 +9,13 @@ interface CartridgeDeckProps {
   onChangeCartridge: (updated: CartridgeSpec) => void;
   barrelLength: number;
   onChangeBarrelLength: (val: number) => void;
+  selectedPrimerPocket: PrimerPocketSize;
+  onChangePrimerPocket: (pocket: PrimerPocketSize) => void;
+  selectedPrimer: PrimerSpec;
+  onChangePrimer: (primer: PrimerSpec) => void;
+  primers: PrimerSpec[];
+  onOpenCaseWaterModal?: () => void;
+  onOpenWildcatModal?: () => void;
   isMetric: boolean;
 }
 
@@ -16,18 +24,60 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
   onChangeCartridge,
   barrelLength,
   onChangeBarrelLength,
+  selectedPrimerPocket,
+  onChangePrimerPocket,
+  selectedPrimer,
+  onChangePrimer,
+  primers,
+  onOpenCaseWaterModal,
+  onOpenWildcatModal,
   isMetric,
 }) => {
+  const supportedPockets = cartridge.supported_primer_pockets || [cartridge.default_primer_pocket || 'large_rifle'];
+  const hasDualPockets = supportedPockets.length > 1;
+
+  // Filter primers by active pocket size
+  const availablePrimers = primers.filter(p => p.pocket_size === selectedPrimerPocket);
+
+  // Cup piercing warning: if MAP > 60k psi and cup <= 0.020" in rifle
+  const isHighPressure = cartridge.max_pressure_psi >= 60000;
+  const isThinCup = selectedPrimer.cup_thickness_in <= 0.020 && selectedPrimer.pocket_size.includes('rifle');
+  const showPiercingWarning = isHighPressure && isThinCup;
+
   return (
     <section className="deck-card">
       <div className="deck-header">
         <div className="deck-title">
           <Target size={14} style={{ flexShrink: 0 }} />
-          <span>1. Cartridge & Chamber Geometry</span>
+          <span>1. Cartridge &amp; Primer Ignition</span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
-          Standard: <strong>{cartridge.standard}</strong>
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {onOpenWildcatModal && (
+            <button
+              onClick={onOpenWildcatModal}
+              title="Create Custom Wildcat"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                backgroundColor: 'rgba(6, 182, 212, 0.12)',
+                color: 'var(--accent-cyan)',
+                border: '1px solid rgba(6, 182, 212, 0.3)',
+                borderRadius: '4px',
+                padding: '2px 6px',
+                fontSize: '10px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              <Sparkles size={11} />
+              <span>Wildcat</span>
+            </button>
+          )}
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
+            Standard: <strong>{cartridge.standard}</strong>
+          </span>
+        </div>
       </div>
 
       <div className="deck-grid">
@@ -67,9 +117,31 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
           />
         </div>
 
-        {/* Case Capacity (gr H2O) */}
+        {/* Case Capacity (gr H2O) with Water Calibrate trigger */}
         <div className="input-field">
-          <label className="input-label">Case Capacity (gr H₂O / cm³)</label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+            <label className="input-label" style={{ margin: 0 }}>Case Capacity (gr H₂O)</label>
+            {onOpenCaseWaterModal && (
+              <button
+                onClick={onOpenCaseWaterModal}
+                title="Calibrate case water volume with dry/wet scale measurements"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--accent-cyan)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  fontSize: '10px',
+                  padding: 0,
+                }}
+              >
+                <Droplets size={11} />
+                <span>H₂O Scale</span>
+              </button>
+            )}
+          </div>
           <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             <input
               type="number"
@@ -155,6 +227,109 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
             />
           </div>
         </div>
+      </div>
+
+      {/* --- PRIMER & IGNITION SYSTEM SECTION --- */}
+      <div style={{
+        marginTop: '6px',
+        padding: '10px 12px',
+        backgroundColor: 'var(--bg-secondary)',
+        borderRadius: '6px',
+        border: '1px solid var(--border-color)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 700, color: 'var(--accent-cyan)' }}>
+            <Zap size={13} />
+            <span>PRIMER &amp; IGNITION DYNAMICS</span>
+          </div>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+            Pre-Impulse: +{selectedPrimer.initial_pressure_bar} bar ({Math.round(selectedPrimer.initial_pressure_bar * 14.5038)} psi)
+          </div>
+        </div>
+
+        {/* Dual Pocket Selector (e.g. 6.5 PRC, 6.5 CM, .308 Palma, .45 ACP) */}
+        {hasDualPockets && (
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <span style={{ fontSize: '10px', color: 'var(--text-muted)', width: '70px', flexShrink: 0 }}>Brass Pocket:</span>
+            <div style={{ display: 'flex', gap: '4px', flex: 1 }}>
+              {supportedPockets.map((p) => {
+                const isActive = p === selectedPrimerPocket;
+                const label = p === 'small_rifle' ? 'Small Rifle (SRP Brass)' :
+                              p === 'large_rifle' ? 'Large Rifle (Factory LRP)' :
+                              p === 'small_pistol' ? 'Small Pistol (NT Brass)' : 'Large Pistol (Standard)';
+                return (
+                  <button
+                    key={p}
+                    onClick={() => {
+                      onChangePrimerPocket(p);
+                      // Auto pick matching primer in new pocket
+                      const match = primers.find(pr => pr.pocket_size === p && pr.is_magnum === selectedPrimer.is_magnum) ||
+                                    primers.find(pr => pr.pocket_size === p);
+                      if (match) onChangePrimer(match);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '4px 6px',
+                      fontSize: '10px',
+                      fontWeight: isActive ? 700 : 500,
+                      borderRadius: '4px',
+                      border: `1px solid ${isActive ? 'var(--accent-cyan)' : 'var(--border-color)'}`,
+                      backgroundColor: isActive ? 'rgba(6, 182, 212, 0.15)' : 'var(--bg-tertiary)',
+                      color: isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Primer Model Dropdown */}
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <select
+            className="input-control"
+            style={{ flex: 1, fontSize: '11px' }}
+            value={selectedPrimer.id}
+            onChange={(e) => {
+              const found = primers.find(p => p.id === e.target.value);
+              if (found) onChangePrimer(found);
+            }}
+          >
+            <optgroup label={`${selectedPrimerPocket.replace('_', ' ').toUpperCase()} PRIMERS`}>
+              {availablePrimers.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name} {p.is_magnum ? '★ MAGNUM' : ''} (Cup: {p.cup_thickness_in}", Brisance: {p.brisance_rating})
+                </option>
+              ))}
+            </optgroup>
+          </select>
+        </div>
+
+        {/* Thin Cup Piercing Warning */}
+        {showPiercingWarning && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            backgroundColor: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '4px',
+            padding: '4px 8px',
+            fontSize: '10px',
+            color: 'var(--status-danger)',
+          }}>
+            <ShieldAlert size={13} style={{ flexShrink: 0 }} />
+            <span>
+              <strong>Warning:</strong> Thin cup ({selectedPrimer.cup_thickness_in}") risks cratering/piercing at {cartridge.max_pressure_psi.toLocaleString()} psi. Recommend 0.025" thick-cup magnum primer (CCI 450 or Rem 7 1/2).
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -10,7 +10,10 @@ import {
   Sparkles,
   Search,
   Database,
-  BookOpen
+  BookOpen,
+  Crosshair,
+  Shield,
+  Ruler
 } from 'lucide-react';
 import { CartridgeSpec } from '../../types/cartridge';
 
@@ -26,6 +29,9 @@ interface NavbarProps {
   onOpenManufacturerMatch: () => void;
   onOpenOBT: () => void;
   onOpenTruing: () => void;
+  onOpenTrajectory: () => void;
+  onOpenRecoil: () => void;
+  onOpenBarrelStepper: () => void;
   onOpenImport: () => void;
   onOpenExport: () => void;
   onResetToDefaults: () => void;
@@ -43,6 +49,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenManufacturerMatch,
   onOpenOBT,
   onOpenTruing,
+  onOpenTrajectory,
+  onOpenRecoil,
+  onOpenBarrelStepper,
   onOpenImport,
   onOpenExport,
   onResetToDefaults,
@@ -155,6 +164,33 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <BookOpen size={14} color="var(--status-safe)" />
           <span>Lab Match</span>
+        </button>
+
+        <button
+          onClick={onOpenTrajectory}
+          style={navBtnStyle}
+          title="QuickTARGET Exterior Ballistics & Downrange Drop Table"
+        >
+          <Crosshair size={14} color="var(--accent-cyan)" />
+          <span>Trajectory</span>
+        </button>
+
+        <button
+          onClick={onOpenRecoil}
+          style={navBtnStyle}
+          title="Free Recoil Energy, Velocity & Impulse Calculator"
+        >
+          <Shield size={14} color="var(--accent-amber)" />
+          <span>Recoil</span>
+        </button>
+
+        <button
+          onClick={onOpenBarrelStepper}
+          style={navBtnStyle}
+          title="Barrel Length Cutoff & Velocity Stepper (ΔV / ΔL)"
+        >
+          <Ruler size={14} color="var(--accent-cyan)" />
+          <span>Barrel &Delta;V</span>
         </button>
 
         <div style={{ width: '1px', height: '18px', backgroundColor: 'var(--border-color)', margin: '0 4px' }} />
