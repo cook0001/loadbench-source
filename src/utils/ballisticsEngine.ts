@@ -243,18 +243,19 @@ export function rankPropellantsForLoad(
   propellants: PropellantSpec[]
 ): PropellantRankingItem[] {
   const results: PropellantRankingItem[] = [];
+  const caseWaterGr = baseInput.cartridge.overflow_capacity_gr_h2o;
+  const targetPressureBar = baseInput.cartridge.max_pressure_bar * 0.98;
 
   for (const prop of propellants) {
-    // Quick heuristic starting charge based on bulk density & case capacity
-    let lowCharge = 20.0;
-    let highCharge = 80.0;
+    // Dynamic starting bounds scaled to cartridge water capacity & powder bulk density
+    const maxEstimatedCharge = Math.max(caseWaterGr * prop.bulk_density_g_cm3 * 1.05, 5.0);
+    let lowCharge = Math.max(caseWaterGr * 0.08, 0.5);
+    let highCharge = maxEstimatedCharge;
     let bestResult: SimulationResult | null = null;
     let bestCharge = lowCharge;
 
     // Binary search for charge that reaches ~98% of SAAMI/CIP Pmax
-    const targetPressureBar = baseInput.cartridge.max_pressure_bar * 0.98;
-
-    for (let iter = 0; iter < 7; iter++) {
+    for (let iter = 0; iter < 8; iter++) {
       const testCharge = (lowCharge + highCharge) / 2;
       const sim = simulateInteriorBallistics({
         ...baseInput,
@@ -272,7 +273,8 @@ export function rankPropellantsForLoad(
       }
     }
 
-    if (bestResult && bestResult.loading_density_pct <= 112) {
+    // Include viable loads with realistic loading density (40% to 115% compressed)
+    if (bestResult && bestResult.loading_density_pct <= 115 && bestResult.loading_density_pct >= 40) {
       results.push({
         propellant_id: prop.id,
         propellant_name: prop.name,

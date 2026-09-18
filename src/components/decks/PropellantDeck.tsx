@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Flame, Sparkles } from 'lucide-react';
 import { PropellantSpec } from '../../types/propellant';
 import { formatWeight } from '../../utils/formatters';
@@ -26,6 +26,28 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
   onChangeBaOffsetPct,
   isMetric,
 }) => {
+  const [brandFilter, setBrandFilter] = useState<string>('all');
+
+  const manufacturers = useMemo(() => {
+    const set = new Set<string>();
+    propellants.forEach(p => set.add(p.manufacturer));
+    return Array.from(set).sort();
+  }, [propellants]);
+
+  const filteredPropellants = useMemo(() => {
+    if (brandFilter === 'all') return propellants;
+    return propellants.filter(p => p.manufacturer === brandFilter);
+  }, [propellants, brandFilter]);
+
+  const groupedPropellants = useMemo(() => {
+    const groups: Record<string, PropellantSpec[]> = {};
+    filteredPropellants.forEach(p => {
+      if (!groups[p.manufacturer]) groups[p.manufacturer] = [];
+      groups[p.manufacturer].push(p);
+    });
+    return groups;
+  }, [filteredPropellants]);
+
   // Color code filling ratio: <85% light blue, 85-100% emerald, 100-105% amber (compressed), >105% red (heavy compression)
   const getFillColor = (pct: number) => {
     if (pct > 105) return 'var(--status-danger)';
@@ -46,9 +68,34 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
         </span>
       </div>
 
-      {/* Powder Selector */}
+      {/* Powder Selector & Brand Filter */}
       <div className="input-field">
-        <label className="input-label">Select Propellant</label>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+          <label className="input-label">Select Propellant ({filteredPropellants.length} of {propellants.length})</label>
+          <select
+            value={brandFilter}
+            onChange={(e) => setBrandFilter(e.target.value)}
+            style={{
+              backgroundColor: 'var(--bg-secondary)',
+              color: 'var(--accent-cyan)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '4px',
+              fontSize: '10px',
+              padding: '2px 6px',
+              fontFamily: 'var(--font-mono)',
+              cursor: 'pointer',
+              outline: 'none',
+            }}
+          >
+            <option value="all">All Brands ({propellants.length})</option>
+            {manufacturers.map(m => (
+              <option key={m} value={m}>
+                {m} ({propellants.filter(p => p.manufacturer === m).length})
+              </option>
+            ))}
+          </select>
+        </div>
+
         <select
           className="input-control"
           value={propellant.id}
@@ -58,10 +105,14 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
           }}
           style={{ width: '100%', minWidth: 0, maxWidth: '100%', textOverflow: 'ellipsis' }}
         >
-          {propellants.map(p => (
-            <option key={p.id} value={p.id}>
-              {p.manufacturer} {p.name} (Ba: {p.burn_rate_ba})
-            </option>
+          {Object.entries(groupedPropellants).map(([mfg, list]) => (
+            <optgroup key={mfg} label={`── ${mfg.toUpperCase()} (${list.length}) ──`}>
+              {list.map(p => (
+                <option key={p.id} value={p.id}>
+                  {p.name} (Ba: {p.burn_rate_ba} | {p.grain_geometry})
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </div>
