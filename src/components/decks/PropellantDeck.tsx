@@ -38,10 +38,10 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
     <section className="deck-card">
       <div className="deck-header">
         <div className="deck-title">
-          <Flame size={14} color="#f97316" />
+          <Flame size={14} color="#f97316" style={{ flexShrink: 0 }} />
           <span>3. Propellant & Powder Charge</span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
           Geometry: <strong>{propellant.grain_geometry}</strong>
         </span>
       </div>
@@ -56,6 +56,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
             const found = propellants.find(p => p.id === e.target.value);
             if (found) onChangePropellant(found);
           }}
+          style={{ width: '100%', minWidth: 0, maxWidth: '100%', textOverflow: 'ellipsis' }}
         >
           {propellants.map(p => (
             <option key={p.id} value={p.id}>
@@ -67,7 +68,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
 
       {/* Charge Weight Slider & Stepper */}
       <div className="input-field">
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
           <label className="input-label">Charge Weight</label>
           <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent-cyan)' }}>
             {formatWeight(chargeGrains, 1, isMetric)}
@@ -76,7 +77,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
         <div className="slider-container">
           <button
             onClick={() => onChangeChargeGrains(Number((chargeGrains - 0.1).toFixed(1)))}
-            style={stepBtnStyle}
+            style={{ ...stepBtnStyle, flexShrink: 0 }}
             title="Step -0.1 gr"
           >
             -0.1
@@ -92,7 +93,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
           />
           <button
             onClick={() => onChangeChargeGrains(Number((chargeGrains + 0.1).toFixed(1)))}
-            style={stepBtnStyle}
+            style={{ ...stepBtnStyle, flexShrink: 0 }}
             title="Step +0.1 gr"
           >
             +0.1
@@ -101,7 +102,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
             type="number"
             step="0.1"
             className="input-control"
-            style={{ width: '70px', textAlign: 'right' }}
+            style={{ width: '62px', textAlign: 'right', flexShrink: 0 }}
             value={chargeGrains}
             onChange={(e) => onChangeChargeGrains(parseFloat(e.target.value) || 0)}
           />
@@ -115,7 +116,8 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
           <span style={{
             fontFamily: 'var(--font-mono)',
             fontWeight: 700,
-            color: getFillColor(loadingDensityPct)
+            color: getFillColor(loadingDensityPct),
+            flexShrink: 0
           }}>
             {loadingDensityPct.toFixed(1)}% {loadingDensityPct > 100 ? '(Compressed)' : ''}
           </span>
@@ -140,17 +142,21 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
 
       {/* Burn Rate Factor (Ba) Calibration Slider */}
       <div className="input-field" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Sparkles size={12} color="var(--accent-cyan)" />
-            <label className="input-label">Ba Calibration Offset (Lot Truing)</label>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0 }}>
+            <Sparkles size={12} color="var(--accent-cyan)" style={{ flexShrink: 0 }} />
+            <label className="input-label" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Ba Calibration Offset
+            </label>
           </div>
           <span style={{
-            fontSize: '11px',
+            fontSize: '10px',
             fontFamily: 'var(--font-mono)',
-            color: baOffsetPct === 0 ? 'var(--text-muted)' : (baOffsetPct > 0 ? 'var(--status-caution)' : 'var(--accent-blue)')
+            color: baOffsetPct === 0 ? 'var(--text-muted)' : (baOffsetPct > 0 ? 'var(--status-caution)' : 'var(--accent-blue)'),
+            whiteSpace: 'nowrap',
+            flexShrink: 0
           }}>
-            {baOffsetPct >= 0 ? `+${baOffsetPct.toFixed(1)}%` : `${baOffsetPct.toFixed(1)}%`} (Effective Ba: {(propellant.burn_rate_ba * (1 + baOffsetPct / 100)).toFixed(4)})
+            {baOffsetPct >= 0 ? `+${baOffsetPct.toFixed(1)}%` : `${baOffsetPct.toFixed(1)}%`} (Ba: {(propellant.burn_rate_ba * (1 + baOffsetPct / 100)).toFixed(4)})
           </span>
         </div>
         <div className="slider-container">
@@ -169,6 +175,7 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
               ...stepBtnStyle,
               fontSize: '10px',
               padding: '2px 6px',
+              flexShrink: 0
             }}
             title="Reset to factory baseline Ba"
           >

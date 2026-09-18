@@ -25,10 +25,10 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
     <section className="deck-card">
       <div className="deck-header">
         <div className="deck-title">
-          <Crosshair size={14} />
+          <Crosshair size={14} style={{ flexShrink: 0 }} />
           <span>2. Projectile & Seating Setup</span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
           Net Combustion Vol: <strong>{usableChamberVolCm3.toFixed(2)} cm³</strong>
         </span>
       </div>
@@ -46,6 +46,7 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
               onChangeSeatingDepth(found.default_seating_depth_in);
             }
           }}
+          style={{ width: '100%', minWidth: 0, maxWidth: '100%', textOverflow: 'ellipsis' }}
         >
           {projectiles.map(p => (
             <option key={p.id} value={p.id}>
@@ -106,12 +107,12 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
         {/* Shot Start Pressure (P0) */}
         <div className="input-field">
           <label className="input-label">Shot Start Pressure (P₀)</label>
-          <div style={{ display: 'flex', gap: '4px' }}>
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             <input
               type="number"
               step="10"
               className="input-control"
-              style={{ flex: 1 }}
+              style={{ flex: 1, minWidth: 0 }}
               value={projectile.shot_start_pressure_bar}
               onChange={(e) => {
                 onChangeProjectile({
@@ -121,10 +122,11 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
               }}
             />
             <span style={{
-              alignSelf: 'center',
               fontSize: '11px',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
             }}>
               bar
             </span>

@@ -4,6 +4,7 @@
   height: 100vh;
   width: 100vw;
   background-color: var(--bg-primary);
+  overflow: hidden;
 }
 
 .app-main {
@@ -13,6 +14,7 @@
   overflow: hidden;
   gap: 1px;
   background-color: var(--border-color);
+  min-height: 0;
 }
 
 .left-panel {
@@ -20,8 +22,19 @@
   flex-direction: column;
   background-color: var(--bg-primary);
   overflow-y: auto;
+  overflow-x: clip;
   padding: 12px;
-  gap: 12px;
+  gap: 10px;
+  min-width: 0;
+  width: 460px;
+  box-sizing: border-box;
+  overscroll-behavior: contain;
+}
+
+@supports not (overflow-x: clip) {
+  .left-panel {
+    overflow-x: hidden;
+  }
 }
 
 .right-panel {
@@ -29,19 +42,28 @@
   flex-direction: column;
   background-color: var(--bg-secondary);
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 12px;
-  gap: 12px;
+  gap: 10px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Card Deck Styling */
 .deck-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .deck-header {
@@ -50,62 +72,83 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 6px;
+  min-width: 0;
+  gap: 8px;
 }
 
 .deck-title {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   color: var(--accent-cyan);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .deck-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px 10px;
+  min-width: 0;
+  width: 100%;
 }
 
 .input-field {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  min-width: 0;
+  width: 100%;
 }
 
 .input-label {
   font-size: 11px;
   color: var(--text-secondary);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .input-control {
+  width: 100%;
+  min-width: 0;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--text-primary);
   padding: 5px 8px;
   font-family: var(--font-mono);
   font-size: 12px;
   outline: none;
-  transition: border-color 0.15s;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .input-control:focus {
   border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
 }
 
 /* Slider Controls */
 .slider-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
 }
 
 .range-slider {
   flex: 1;
+  min-width: 40px;
   accent-color: var(--accent-cyan);
   cursor: pointer;
 }
@@ -113,8 +156,14 @@
 /* Diagnostic Badges & Tiles */
 .diagnostics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
+}
+
+@media (max-width: 1280px) {
+  .diagnostics-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .diag-card {

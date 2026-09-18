@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import './App.css';
 
 // Types
@@ -38,6 +38,8 @@ import { ImportModal } from './components/modals/ImportModal';
 import { ExportReportModal } from './components/modals/ExportReportModal';
 
 export const App: React.FC = () => {
+  const leftPanelRef = useRef<HTMLElement | null>(null);
+
   // Database Collections
   const [cartridges, setCartridges] = useState<CartridgeSpec[]>(initialCartridges as CartridgeSpec[]);
   const [propellants] = useState<PropellantSpec[]>(initialPropellants as PropellantSpec[]);
@@ -54,6 +56,13 @@ export const App: React.FC = () => {
   const [seatingDepth, setSeatingDepth] = useState<number>(projectiles[0].default_seating_depth_in);
   const [baOffsetPct, setBaOffsetPct] = useState<number>(0);
   const [isMetric, setIsMetric] = useState<boolean>(false);
+
+  // Ensure left panel is never horizontally offset
+  useEffect(() => {
+    if (leftPanelRef.current) {
+      leftPanelRef.current.scrollLeft = 0;
+    }
+  }, []);
 
   // Modal Visibility States
   const [isLadderOpen, setIsLadderOpen] = useState<boolean>(false);
@@ -190,7 +199,7 @@ export const App: React.FC = () => {
       {/* Main Split-Screen Workbench */}
       <main className="app-main">
         {/* Left Side: Geometry, Projectile, and Propellant Decks */}
-        <section className="left-panel">
+        <section ref={leftPanelRef} className="left-panel">
           <CartridgeDeck
             cartridge={cartridge}
             onChangeCartridge={setCartridge}
@@ -233,8 +242,10 @@ export const App: React.FC = () => {
           <BallisticsChart
             result={simulationResult}
             barrelLengthInches={barrelLength}
+            caseLengthInches={cartridge.case_length_in}
             mapPressureBar={cartridge.max_pressure_bar}
             isMetric={isMetric}
+            obtNodes={obtNodes}
           />
         </section>
       </main>

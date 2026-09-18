@@ -22,10 +22,10 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
     <section className="deck-card">
       <div className="deck-header">
         <div className="deck-title">
-          <Target size={14} />
+          <Target size={14} style={{ flexShrink: 0 }} />
           <span>1. Cartridge & Chamber Geometry</span>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0 }}>
           Standard: <strong>{cartridge.standard}</strong>
         </span>
       </div>
@@ -70,12 +70,12 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
         {/* Case Capacity (gr H2O) */}
         <div className="input-field">
           <label className="input-label">Case Capacity (gr H₂O / cm³)</label>
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             <input
               type="number"
               step="0.1"
               className="input-control"
-              style={{ flex: 1 }}
+              style={{ flex: 1, minWidth: 0 }}
               value={cartridge.overflow_capacity_gr_h2o}
               onChange={(e) => {
                 onChangeCartridge({
@@ -85,11 +85,11 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
               }}
             />
             <span style={{
-              alignSelf: 'center',
               fontSize: '11px',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
-              minWidth: '50px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
             }}>
               {(cartridge.overflow_capacity_gr_h2o * 0.06479891).toFixed(2)} cm³
             </span>
@@ -99,12 +99,12 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
         {/* Max Rated Chamber Pressure */}
         <div className="input-field">
           <label className="input-label">Max Allowable Pressure (MAP)</label>
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             <input
               type="number"
               step="10"
               className="input-control"
-              style={{ flex: 1 }}
+              style={{ flex: 1, minWidth: 0 }}
               value={isMetric ? cartridge.max_pressure_bar : cartridge.max_pressure_psi}
               onChange={(e) => {
                 const val = parseFloat(e.target.value) || 1000;
@@ -116,10 +116,11 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
               }}
             />
             <span style={{
-              alignSelf: 'center',
               fontSize: '11px',
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
             }}>
               {isMetric ? 'bar' : 'psi'}
             </span>
@@ -148,7 +149,7 @@ export const CartridgeDeck: React.FC<CartridgeDeckProps> = ({
               type="number"
               step="0.1"
               className="input-control"
-              style={{ width: '70px', textAlign: 'right' }}
+              style={{ width: '62px', textAlign: 'right', flexShrink: 0 }}
               value={barrelLength}
               onChange={(e) => onChangeBarrelLength(parseFloat(e.target.value) || 1)}
             />

@@ -31,7 +31,7 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -51,6 +51,19 @@ body {
 input, select, button, textarea {
   font-family: inherit;
   font-size: inherit;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Remove default number input spinner arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 button {
