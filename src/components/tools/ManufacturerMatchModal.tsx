@@ -94,7 +94,7 @@ export const ManufacturerMatchModal: React.FC<ManufacturerMatchModalProps> = ({
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -217,7 +217,7 @@ export const ManufacturerMatchModal: React.FC<ManufacturerMatchModalProps> = ({
                     </div>
                     <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
                       <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--accent-cyan)' }}>
-                        {ref.charge_grains} gr ➔ {ref.muzzle_velocity_fps} fps
+                        {ref.charge_grains} gr &rarr; {ref.muzzle_velocity_fps} fps
                       </div>
                       <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
                         Peak: {ref.max_pressure_psi.toLocaleString()} psi
@@ -370,19 +370,8 @@ export const ManufacturerMatchModal: React.FC<ManufacturerMatchModalProps> = ({
           )}
         </div>
 
-        <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', padding: '10px 16px', display: 'flex', justifyContent: 'flex-end' }}>
-          <button
-            onClick={onClose}
-            style={{
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '4px',
-              padding: '6px 14px',
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
-          >
+        <div className="modal-footer">
+          <button onClick={onClose} className="btn-secondary">
             Close
           </button>
         </div>

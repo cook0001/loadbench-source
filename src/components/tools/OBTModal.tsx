@@ -60,11 +60,7 @@ export const OBTModal: React.FC<OBTModalProps> = ({
             </div>
           </div>
 
-          <table style={{
-            width: '100%',
-            borderCollapse: 'collapse',
-            fontSize: '11px',
-            fontFamily: 'var(--font-mono)',
+          <table className="ladder-table" style={{
             textAlign: 'right',
           }}>
             <thead>
@@ -125,18 +121,10 @@ export const OBTModal: React.FC<OBTModalProps> = ({
         </div>
 
         <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Close</button>
+          <button onClick={onClose} className="btn-secondary">Close</button>
         </div>
       </div>
     </div>
   );
 };
 
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
-};

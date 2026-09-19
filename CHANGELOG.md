@@ -8,14 +8,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Native Handloading Recipe Interchange (`.loadbench` / `.ldb`) & Dedicated Modal (`SaveLoadProjectModal.tsx`)**:
+  - Interactive save dialog exporting complete handload recipe matching `https://armstrader.store/schemas/loadbench-recipe-v1.json` (`application/vnd.loadbench.recipe+json`).
+  - Preserves author attribution, production lot number, batch round count, target firearm, CBTO, jump to lands, and complete interior ballistics summary.
+  - Ingestible directly into ArmoryVault Desktop & Tauri ammo inventory systems.
+- **Reloader & Ballistician Profile System (`SettingsModal.tsx`)**:
+  - Added persistent author profile, default lot prefix, and primary target rifle preferences saved in `localStorage` (`loadbench_author_name`).
+- **Direct Wildcat Studio Cartridge Ingestion (`.wildcat` / `.wcs`)**:
+  - Added native JSON specification ingestion in `fileParsers.ts` and `ImportModal.tsx`, allowing 1-click import of custom cartridge designs created in Wildcat Studio.
+- **CSV Data Exports (`ChargeLadderModal.tsx`, `TrajectoryModal.tsx`)**:
+  - Added 1-click CSV export buttons for the charge stepping ladder and 1000-yard downrange exterior ballistics table.
+- **Global Productivity Shortcuts**:
+  - Added `Ctrl+S` / `Cmd+S` (Save Load Recipe), `Ctrl+P` / `Cmd+P` (Export Report), and `Ctrl+I` / `Cmd+I` (Import Data) shortcuts.
+  - Standalone primer laboratory browser inspecting all **109 centerfire primers across 15 manufacturers**.
+  - Advanced filtering by brand, pocket size (SP, SPM, LP, LPM, SR, SRM, LR, LRM), and category (Standard, Magnum, Match/Benchrest, Heavy Rifle).
+  - Physics gauges and comparative metrics: Brisance index, Pre-impulse pressure ($P_0$ bar/psi), Flame temperature ($T_{\text{flame}}$ K), Gas volume ($V_{\text{gas}}$ cm³), and Cup thickness (in).
+  - 1-click "Load into Workbench" action syncing active primer and pocket size directly to Deck 1.
+- **Relative Powder Burn Rate Spectrum Chart (`PowderBurnChartModal.tsx`)**:
+  - Comprehensive relative quickness ($Ba$) chart ranking **180+ smokeless propellants** from fastest to slowest.
+  - Burn speed categories (Extremely Fast Handgun, Fast Handgun, Medium Handgun / Magnum, Fast Rifle, Medium Benchmark Rifle, Slow Rifle / Magnum, Ultra Slow Extreme Magnum).
+  - Highlights active workstation propellant with instant $\pm 3$ adjacent powder substitution suggestions and burn rate delta percentages.
+  - 1-click propellant swap into Deck 3.
+- **Cartridge Base to Ogive (CBTO) & Bullet Jump Calculator (`cbtoEngine.ts`, `BulletJumpModal.tsx`)**:
+  - Dedicated seating depth and comparator gauge laboratory.
+  - Hornady / Sinclair standard bullet comparator insert diameter matching ($0.224''$ to $0.338''$).
+  - Jump preset stepping (Jam $+0.010''$, Touch $0.000''$, Hybrid Match $0.015'' - 0.020''$, Standard Jump $0.030'' - 0.050''$, Hunting Mag Box $0.080''+$).
+  - Barrel throat erosion wear tracker accounting for cumulative rounds fired.
+  - Live synchronization to workstation seating depth.
+- **Volumetric Powder Measure & VMD Cavity Sizing (`PowderMeasureModal.tsx`)**:
+  - Volumetric density calculator using propellant VMD ($cc/\text{grain}$) to compute rotor/cavity volume.
+  - Tailored dispenser presets: Lee Auto-Disk cavity sizes, RCBS Uniflow micrometer graduations, Hornady Lock-N-Load rotor depth, and Dillon Precision powder bar bolt travel.
+- **Printable 1-Page Benchrest Range Card & Chrono Logger (`RangeCardModal.tsx`)**:
+  - High-contrast monochrome printable range card for benchrest clipboards.
+  - Complete interior ballistics and load specification summary.
+  - 500-yard downrange trajectory table with bullet drop (inches, MOA, MIL) and 10mph crosswind drift.
+  - 10-shot chronograph logging grid with calculated Average velocity, Extreme Spread (ES), and Standard Deviation (SD).
+  - Environmental logging box (Temp, Pressure, Humidity, Density Altitude) and scannable ArmoryVault QR code.
+- **Dedicated Project Save & Open Handlers (`App.tsx`, `Navbar.tsx`)**:
+  - Implemented `.load` / `.json` project save and open handlers in the `File` menu and toolbar.
+  - Exports complete load state including cartridge, projectile, propellant, charge, seating depth, primer, barrel specs, and simulated ballistics.
+- **Comprehensive Global Rifle & Pistol Primer Catalog (`primers.json`, `CartridgeDeck.tsx`)**:
+  - Expanded the primer database to **109 primers** spanning **15 premier global manufacturers**: CCI, Federal Premium, Winchester, Remington, Sellier & Bellot, Fiocchi, Unis Ginex, Murom / Wolf / Tula / PMC, RWS / RUAG, Magtech / CBC, Cheddite, Norma Precision, Aguila, Barnaul, and Eley.
+  - Dedicated focus strictly on metallic rifle and pistol handloading (Small Pistol, Large Pistol, Small Rifle, Large Rifle, and .50 BMG Heavy Rifle), intentionally excluding shotgun/209 primers.
+  - Full thermochemical and mechanical ballistic properties for every model: brisance rating, initial pre-pressurization impulse (bar/psi), gas volume produced (cm³), flame temperature (K), and cup thickness (in).
+  - Enhanced primer selection UI in `CartridgeDeck.tsx`: automatically groups options by manufacturer with model counts (`CCI (15)`, `Federal (15)`, `Sellier & Bellot (9)`, etc.) and displays inline technical descriptions covering cup thickness, anvil hardness, and intended use cases.
+- **Safe Working Range & Charge Solver (`chargeSolverEngine.ts`, `SafeChargeSolverModal.tsx`)**:
+  - Implemented high-speed internal ballistics solver providing zero-guesswork charge range determination.
+  - **Automated Safe Envelope**: Automatically computes Minimum Starting Charge (-10% rule & safe ignition threshold), Maximum Safe Working Charge (100.0% SAAMI/CIP MAP), Proof/Overpressure Threshold (105% MAP), and 100% Non-Compressed Case Fill.
+  - **Chris Long OBT Harmonic Node Matching**: Computes theoretical acoustic stress wave transit times for the current barrel length and reverse-solves exact charge weights to synchronize bullet muzzle exit with acoustic nodes (Nodes 1-7), automatically flagging the optimal safe "Sweet Spot" node.
+  - **Interactive Reverse Target Solver**: Solves required charge weight to match user-defined Target Velocity (fps / m/s), Target Peak Chamber Pressure (psi / bar / % MAP), or Target Case Fill Ratio (%).
+  - **Propellant Suitability Diagnostics**: Analyzes combustion efficiency (% burnt at muzzle), loading density safety (< 75% flashover risk, > 105% heavy compression warning), and provides actionable suitability verdicts.
+  - **Complete Workup Stepping Ladder**: Stepped progression table spanning the entire safe working range with 1-click loading directly into the workstation.
+  - **Direct Deck & Nav Integration**: Accessible via `Calculators -> Safe Working Range & Charge Solver` and 1-click shortcut buttons in `PropellantDeck.tsx` (in the action row and next to the Charge Weight slider).
+- **Desktop Navbar Overhaul & Dropdown Navigation (`Navbar.tsx`)**:
+  - Replaced crowded flat navigation buttons with structured desktop menu bar dropdowns: `File`, `Calculators`, `Databases`, `Ecosystem`, and `Help & Settings`.
+  - Added Active Cartridge Badge button directly in the navbar showing the current chambering and standard, opening the full cartridge selector modal on click.
+  - Implemented global `Ctrl+O` / `Cmd+O` keyboard shortcut to open the cartridge selector modal.
+- **Interactive Cartridge Selector Modal (`CartridgeSelectorModal.tsx`)**:
+  - Searchable modal across 385+ verified SAAMI, CIP, and Wildcat cartridges with instant keystroke filtering.
+  - Caliber range filter chips: Small (.172-.224), Medium (6mm-6.5mm), Standard (7mm-.308), Large (8mm-.375), and Big Bore (.400+).
+  - Live technical specifications inspection panel displaying bullet diameter, case length, COAL, rim diameter, overflow water capacity, and maximum average pressure (MAP).
+- **Printable Ammo Can & Box Label Generator (`AmmoCanLabelModal.tsx`)**:
+  - Precision label layout generator supporting 2"×4" cartridge boxes and 3"×5" metal ammunition cans.
+  - Scannable vector QR code encoded with ArmoryVault handload interchange payload for instant mobile or desktop companion scanning.
+  - Configurable lot number, load date, custom batch notes, and formatted velocity/pressure specs.
+- **Batch Cost & Handload Savings Calculator (`BatchCostModal.tsx`)**:
+  - Comprehensive cost-per-round and batch production financial calculator accounting for powder ($/lb @ 7000 gr), primer ($/1000), bullet ($/box), and brass case amortization across user-defined firings.
+  - Commercial ammunition price comparison calculating total batch savings and press equipment ROI breakeven point.
+- **Head-to-Head Cartridge Comparison Duel (`CartridgeCompareModal.tsx`)**:
+  - Side-by-side simultaneous ballistics simulation comparing active workstation load against any challenger cartridge, projectile, powder, charge, and barrel length.
+  - Full comparative metrics table: muzzle velocity, kinetic energy, peak pressure (% MAP), powder burn completion %, powder efficiency (ft-lbs/gr), free recoil energy, and 500yd/1000yd downrange velocity, energy, and drop.
+  - 1-click button to swap challenger load directly into the active workbench.
+- **Thermal Stability & Temperature Drift Analyzer (`ThermalStabilityModal.tsx`)**:
+  - Temperature sensitivity spectrum simulating velocity and chamber pressure shifts from -20°F to 140°F (-29°C to 60°C).
+  - Visual overpressure warning indicators highlighting summer direct-sunlight danger thresholds where loads developed in cool weather approach or exceed SAAMI MAP.
+- **Database Backup & Disaster Recovery Manager (`BackupRestoreModal.tsx`)**:
+  - 1-click JSON backup export and restoration of all custom user cartridges, wildcats, powders, projectiles, and preferences.
+  - Safe file parser with item preview counts and factory reset options.
+- **Simulation Settings & Preferences Modal (`SettingsModal.tsx`)**:
+  - Configurable unit systems (Imperial/Metric), pressure units (psi, bar, MPa), numerical integration ODE step size, Lagrange gas inertia factor, heat loss percentage, and MAP warning thresholds.
+- **Comprehensive Technical User Manual (`UserManualModal.tsx`, `docs/USER_MANUAL.md`)**:
+  - 11 technical chapters detailing interior ballistics theory, Noble-Abel equation of state, Vieille's combustion law, powder burn rate indices, OBT harmonics, and ecosystem workflow.
+- **Reloading Safety & Legal Simulation Disclaimer (`LegalDisclaimerModal.tsx`, `docs/DISCLAIMER.md`)**:
+  - Formal reloading safety protocol, 10% charge reduction rules, and simulation disclaimer with user acknowledgment state.
+- **ArmoryVault & Wildcat Studio Ecosystem Bridge (`EcosystemModal.tsx`)**:
+  - Direct export of ArmoryVault Handload Cards (`.avr` and `.json`), Wildcat Studio interchange files (`.wildcat.json` and `.vol`), and `armstrader.store` community repository integration.
 - **1,120+ Factory Projectile Catalog**: Comprehensive expansion of verified bullets across 25 manufacturers (Hornady, Sierra, Nosler, Barnes, Berger, Speer, Lapua, Federal, Swift, Norma, Cutting Edge, Woodleigh, Berry's, Cast Performance, Lehigh Defense, Winchester, Remington, Hammer Bullets, Lake City, Peregrine) spanning all calibers (.172 through .50 BMG and handgun calibers 9mm, .357, .40/10mm, .44, .45, .454, .500 S&W).
 - **Accurate Ballistic & Engraving Modeling**: Physical projectile dimensions including bullet length, shank length, G1/G7 ballistic coefficients, base types (boat tail, flat base, round nose), and shot start engraving pressure ($P_0 = 380$ bar for monolithic copper, $250$ bar for standard jacketed lead core, $150$ bar for cast/plated lead).
 - **Projectile Database Modal (`ProjectileDatabaseModal.tsx`)**: Fullscreen/modal searchable catalog with multi-parameter filtering (by caliber matching current cartridge, specific caliber, manufacturer, or bullet category: Match/Target, Hunting, Monolithic, Handgun), sorting by grain weight or G1 BC, gyroscopic stability factor ($S_g$) preview with Don Miller ARL formula, and one-click loading into the workstation.
 - **Brand Filter & Quick DB Launcher in `ProjectileDeck.tsx`**: In-deck manufacturer dropdown filter and direct database button for streamlined bullet selection among 1,120+ options.
-- **Navbar Integration**: Added Bullet Database launcher button in the primary top toolbar next to Powder Database.
-- Initial project scaffolding: Tauri 2 + Vite + React 19 + TypeScript + Rust native ODE engine.
-- Interior ballistics thermodynamic solver architecture: Noble-Abel real-gas equation of state, Vieille's combustion law, grain form functions, Lagrange gas inertia correction, projectile engraving friction, and heat transfer.
-- Direct interchange with Wildcat Studio (`Quick_Design`) supporting `.qdf` and `.vol` formats.
-- Chris Long Optimal Barrel Time (OBT) harmonic node calculation engine.
-- Interactive dual-axis Canvas curve rendering for chamber pressure $P(x)$ and bullet velocity $V(x)$ across barrel travel.
-- Four-pillar propellant calculation framework: Closed-bomb database, grain formulator, relative quickness interpolation, and chronograph velocity truing.
+### Fixed
+- **Workbench Left Panel & Deck Layout Overhaul**:
+  - Expanded `.app-main` left panel column from 490px to 505px in `App.css` and tightened `.deck-card` vertical padding (`10px 12px`, `gap: 7px`) to prevent cramped controls and horizontal overflows.
+  - Added sleek, semi-transparent custom scrollbars (`.left-panel::-webkit-scrollbar`, `.right-panel::-webkit-scrollbar`, `.modal-body::-webkit-scrollbar`) matching the dark slate theme.
+- **Elimination of Monolithic Button Rows in Deck Cards**:
+  - `PropellantDeck`: Removed cramped 5-button horizontal row (`[Viewer]`, `[Burn Chart]`, `[VMD Dispenser]`, `[Lab Match]`, `[Charge Solver]`) that truncated on the right margin (`[Charg...]`). Replaced with a clean, full-width `Propellant Manufacturer Filter` dropdown and dedicated `[Burn Chart]` button, keeping `[Charge Solver]` cleanly placed beside the Charge Weight slider.
+  - `ProjectileDeck`: Removed extraneous buttons from card header; labeled `Projectile Brand Filter` accurately. Replaced ambiguous `Standard Freebore Jump` toggle with a clear, professional `Rifling Leade Engagement` control with segmented buttons (`Freebore Jump (Standard)` vs `Touching / Jammed Lands (+150 bar)`) and live shot-start pressure diagnostics (`+150 bar (+2,175 psi)`).
+  - `CartridgeDeck`: Removed cramped `[Wildcat]` and `[Primer DB]` header buttons (now accessed directly from top navbar menus), and refined all input labels: `Case Length (Trim-To)`, `Cartridge Overall Length (COAL)`, `Gross Case Capacity (gr H₂O)`, `Max Allowable Pressure (MAP Limit)`, `Rifled Barrel Length`, and `Brass Primer Pocket`.
+- **Accurate & Non-Generic Desktop Terminology Across Navbar & Menus**:
+  - Replaced generic navbar buttons: updated `[Label]` to `[Ammo Can Label (QR)]` and added descriptive text label to `[Settings]`.
+  - Refined all dropdown menu items across `Calculators` and `Databases` menus to use precise ballistic terminology (e.g. `Incremental Charge Ladder Table`, `CBTO & Bullet Jump Geometry`, `Powder Dispenser & VMD Volumetric Measure`, `Dual Load Side-by-Side Comparison`, `Optimal Barrel Time (OBT) Shockwave Nodes`, `Powder Thermal Stability & Sensitivity Drift`, `Chronograph Truing & Ba Calibration Offset`, `Downrange Exterior Trajectory Table (Point-Mass)`, `Free Recoil Energy & Momentum Impulse`, `Barrel Cut-Down & Velocity Stepper`, `Case Water Volume (H₂O) Scale Calibration`, `Batch Production Cost & Handload Savings`, `Propellant Chemical Database (181 Powders)`, `Relative Powder Burn Rate Ranking Spectrum`, `Factory Projectile Catalog (1,120+ Bullets)`, `Primer Ignition Dynamics Database (109 Primers)`, `Propellant Performance Ranking Matrix`, `Published Manufacturer Load Data Matcher`, and `Custom Cartridge & Wildcat Designer`).
+- **Left Panel Vertical Truncation & Card Crushing**: Added `flex-shrink: 0` to `.deck-card` in `App.css`, preventing flexbox from squashing the bottom half of cards (Primer Ignition Dynamics, Seating Depth, Miller Stability HUD, Powder Temp, and Ba sliders) when window height is constrained. Ensured `.left-panel` vertical scrolling operates smoothly.
+- **Strict Zero Emoji Compliance**: Audited all components and replaced all raw emojis (star, warning, snowflake, arrow) with dedicated Lucide SVG icons and standardized text badges across decks, tables, and modals.

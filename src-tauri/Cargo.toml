@@ -1,8 +1,8 @@
 [package]
 name = "quick-load-studio"
 version = "1.0.0"
-description = "QuickLOAD Studio - High-Performance Interior Ballistics Suite"
-authors = ["QuickLoadStudio"]
+description = "LoadBench Studio - High-Performance Interior Ballistics Suite"
+authors = ["LoadBenchStudio"]
 edition = "2021"
 
 [lib]

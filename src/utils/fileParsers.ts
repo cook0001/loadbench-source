@@ -3,9 +3,9 @@ import { PropellantSpec } from '../types/propellant';
 import { ProjectileSpec } from '../types/projectile';
 
 /**
- * Parses QuickDESIGN / Wildcat Studio (.qdf) interchange text.
+ * Parses Universal Cartridge Interchange (.qdf / .dat) text.
  */
-export function parseQuickDesignQDF(content: string): Partial<CartridgeSpec> | null {
+export function parseUniversalQDF(content: string): Partial<CartridgeSpec> | null {
   try {
     const lines = content.split('\n');
     const data: Record<string, string> = {};
@@ -60,10 +60,62 @@ export function parseQuickDesignQDF(content: string): Partial<CartridgeSpec> | n
   }
 }
 
+// Backward-compatible alias
+export const parseQuickDesignQDF = parseUniversalQDF;
+
 /**
- * Parses QuickLOAD legacy volume record (.vol).
+ * Parses native Wildcat Studio Cartridge Specification (.wildcat / .wcs).
+ * MIME: application/vnd.wildcatstudio.cartridge+json
  */
-export function parseQuickLoadVOL(line: string): Partial<CartridgeSpec> | null {
+export function parseWildcatSpecJSON(content: string): Partial<CartridgeSpec> | null {
+  try {
+    const data = JSON.parse(content);
+    if (!data || (data.format !== 'wildcat_cartridge_specification' && !data.dimensions)) {
+      return null;
+    }
+
+    const meta = data.metadata || {};
+    const dims = data.dimensions || {};
+    const vol = data.volumetrics || {};
+    const safety = data.safety_limits || {};
+
+    const name = meta.name || 'Wildcat Cartridge';
+    const id = meta.id || `wildcat_${name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+    const bulletDia = dims.bullet_diameter_in || dims.bullet_diameter || 0.264;
+    const caseLength = dims.case_length_in || dims.case_length || 2.0;
+    const coal = dims.coal_in || dims.coal || caseLength + 0.8;
+    const maxBar = safety.max_pressure_bar || 4200;
+    const maxPsi = safety.max_pressure_psi || Math.round(maxBar * 14.5038);
+    const overflowH2O = vol.overflow_capacity_grains_h2o || 50.0;
+    const boreArea = Math.PI * Math.pow(bulletDia / 2, 2) * 0.988;
+
+    return {
+      id,
+      name,
+      standard: (meta.standard === 'CIP' || meta.standard === 'SAAMI') ? meta.standard : 'Wildcat',
+      category: meta.category || (meta.designer ? `Wildcat (by ${meta.designer})` : 'Wildcat Studio'),
+      case_length_in: caseLength,
+      coal_in: coal,
+      bullet_diameter_in: bulletDia,
+      bore_diameter_in: bulletDia - 0.008,
+      groove_diameter_in: bulletDia,
+      bore_area_sq_in: Number(boreArea.toFixed(4)),
+      overflow_capacity_gr_h2o: overflowH2O,
+      max_pressure_bar: maxBar,
+      max_pressure_psi: maxPsi,
+      default_barrel_length_in: 24.0,
+      rim_diameter_in: dims.rim_diameter_in || dims.rim_diameter,
+      base_diameter_in: dims.base_diameter_in || dims.base_diameter,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Parses legacy volume record (.vol).
+ */
+export function parseLegacyVolRecord(line: string): Partial<CartridgeSpec> | null {
   const clean = line.trim();
   if (!clean || clean.startsWith('#') || clean.startsWith(';')) {
     return null;
@@ -88,7 +140,7 @@ export function parseQuickLoadVOL(line: string): Partial<CartridgeSpec> | null {
     id: `ql_${name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
     name,
     standard: standardStr.includes('CIP') ? 'CIP' : 'SAAMI',
-    category: 'QuickLOAD Import',
+    category: 'Imported Cartridge',
     overflow_capacity_gr_h2o: overflowH2O,
     case_length_in: caseLength,
     bullet_diameter_in: bulletDia,
@@ -106,9 +158,9 @@ export function parseQuickLoadVOL(line: string): Partial<CartridgeSpec> | null {
 }
 
 /**
- * Parses QuickLOAD propellant file (.pro) line or content.
+ * Parses legacy propellant file (.pro) line or content.
  */
-export function parseQuickLoadPRO(content: string): Partial<PropellantSpec>[] {
+export function parseLegacyProRecord(content: string): Partial<PropellantSpec>[] {
   const results: Partial<PropellantSpec>[] = [];
   const lines = content.split('\n');
 
@@ -129,7 +181,7 @@ export function parseQuickLoadPRO(content: string): Partial<PropellantSpec>[] {
     const bulkDensity = fields[7] ? parseFloat(fields[7]) : 0.92;
 
     // Detect manufacturer from powder name prefix
-    let manufacturer = 'Custom / QuickLOAD';
+    let manufacturer = 'Imported Custom';
     if (name.includes('Hodgdon') || name.startsWith('H') || name.startsWith('CFE') || name.startsWith('Varget')) manufacturer = 'Hodgdon';
     else if (name.includes('Alliant') || name.startsWith('Reloder') || name.startsWith('RL')) manufacturer = 'Alliant';
     else if (name.includes('Vihtavuori') || name.startsWith('N1') || name.startsWith('N5')) manufacturer = 'Vihtavuori';
@@ -167,9 +219,9 @@ export function parseQuickLoadPRO(content: string): Partial<PropellantSpec>[] {
 }
 
 /**
- * Parses QuickLOAD projectile file (.bul) line or content.
+ * Parses legacy projectile file (.bul) line or content.
  */
-export function parseQuickLoadBUL(content: string): Partial<ProjectileSpec>[] {
+export function parseLegacyBulRecord(content: string): Partial<ProjectileSpec>[] {
   const results: Partial<ProjectileSpec>[] = [];
   const lines = content.split('\n');
 
@@ -186,7 +238,7 @@ export function parseQuickLoadBUL(content: string): Partial<ProjectileSpec>[] {
     const lengthIn = parseFloat(fields[3]) || 1.30;
     const g1Bc = fields[4] ? parseFloat(fields[4]) : 0.50;
 
-    let manufacturer = 'QuickLOAD Import';
+    let manufacturer = 'Imported Bullet';
     if (name.includes('Hornady')) manufacturer = 'Hornady';
     else if (name.includes('Sierra')) manufacturer = 'Sierra';
     else if (name.includes('Berger')) manufacturer = 'Berger';
@@ -236,4 +288,75 @@ export function exportLoadRecipeJSON(load: {
     timestamp: new Date().toISOString(),
     ...load,
   }, null, 2);
+}
+
+export interface ParsedLoadBenchRecipe {
+  metadata?: {
+    recipe_title?: string;
+    author?: string;
+    created_at?: string;
+    updated_at?: string;
+    lot_number?: string;
+    batch_size?: number;
+    target_firearm?: string | null;
+    notes?: string;
+  };
+  cartridge?: Partial<CartridgeSpec>;
+  projectile?: Partial<ProjectileSpec>;
+  propellant?: Partial<PropellantSpec>;
+  primer?: any;
+  primerPocket?: any;
+  chargeGrains?: number;
+  barrelLengthInches?: number;
+  barrelTwistInches?: number;
+  seatingDepthInches?: number;
+  powderTemperatureF?: number;
+  isTouchingLands?: boolean;
+  baOffsetPct?: number;
+}
+
+/**
+ * Parses native LoadBench Recipe (.loadbench / .ldb) or legacy load file.
+ */
+export function parseLoadBenchRecipeJSON(content: string): ParsedLoadBenchRecipe | null {
+  try {
+    const data = JSON.parse(content);
+    if (!data || typeof data !== 'object') return null;
+
+    // 1. Check native loadbench_recipe schema
+    if (data.format === 'loadbench_recipe' || (data.cartridge && data.projectile && data.propellant)) {
+      const meta = data.metadata || {};
+      const charge = data.charge || {};
+      const dims = data.dimensions || {};
+
+      return {
+        metadata: {
+          recipe_title: meta.recipe_title || (data.cartridge?.name ? `${data.cartridge.name} Load Recipe` : 'Imported Recipe'),
+          author: meta.author || 'Bench Ballistician',
+          created_at: meta.created_at,
+          updated_at: meta.updated_at,
+          lot_number: meta.lot_number || 'LOT-DEFAULT',
+          batch_size: meta.batch_size || 50,
+          target_firearm: meta.target_firearm || null,
+          notes: meta.notes || '',
+        },
+        cartridge: data.cartridge,
+        projectile: data.projectile,
+        propellant: data.propellant,
+        primer: data.primer,
+        primerPocket: data.primer?.pocket_size || data.primerPocket || 'large_rifle',
+        chargeGrains: typeof charge.charge_grains === 'number' ? charge.charge_grains : data.chargeGrains,
+        barrelLengthInches: typeof dims.barrel_length_in === 'number' ? dims.barrel_length_in : data.barrelLengthInches,
+        barrelTwistInches: typeof dims.barrel_twist_in === 'number' ? dims.barrel_twist_in : data.barrelTwistInches || 8.0,
+        seatingDepthInches: typeof dims.seating_depth_in === 'number' ? dims.seating_depth_in : data.seatingDepthInches,
+        powderTemperatureF: typeof charge.temperature_f === 'number' ? charge.temperature_f : data.powderTemperatureF || 70,
+        isTouchingLands: typeof dims.is_touching_lands === 'boolean' ? dims.is_touching_lands : data.isTouchingLands || false,
+        baOffsetPct: typeof charge.ba_offset_pct === 'number' ? charge.ba_offset_pct : data.baOffsetPct || 0,
+      };
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 }

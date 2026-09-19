@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Table, ShieldCheck, AlertTriangle, ShieldAlert } from 'lucide-react';
+import { X, Table, ShieldCheck, AlertTriangle, ShieldAlert, Download } from 'lucide-react';
 import { ChargeLadderStep } from '../../types/ballistics';
 import { formatPressure, formatVelocity, formatWeight } from '../../utils/formatters';
 
@@ -24,6 +24,31 @@ export const ChargeLadderModal: React.FC<ChargeLadderModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  const handleExportCSV = () => {
+    const headers = ['Charge_Weight_gr', 'Pmax_psi', 'Pmax_bar', 'Percent_of_MAP', 'Velocity_fps', 'Fill_Ratio_pct', 'Burned_pct', 'Barrel_Time_ms', 'Safety_Status'];
+    const rows = steps.map(s => [
+      s.charge_grains.toFixed(1),
+      Math.round(s.max_pressure_bar * 14.5038),
+      s.max_pressure_bar.toFixed(1),
+      ((s.max_pressure_bar / mapPressureBar) * 100).toFixed(1),
+      Math.round(s.muzzle_velocity_fps),
+      s.fill_ratio_pct.toFixed(1),
+      s.burn_pct.toFixed(1),
+      s.barrel_time_ms.toFixed(4),
+      s.status
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Charge_Ladder_${currentCharge}gr.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '850px' }}>
@@ -42,11 +67,7 @@ export const ChargeLadderModal: React.FC<ChargeLadderModalProps> = ({
             Incremental charge variation showing chamber pressure, muzzle velocity, filling ratio, and powder burn efficiency. Click any row to load that charge into the workbench.
           </div>
 
-          <table style={{
-            width: '100%',
-            borderCollapse: 'collapse',
-            fontSize: '11px',
-            fontFamily: 'var(--font-mono)',
+          <table className="ladder-table" style={{
             textAlign: 'right',
           }}>
             <thead>
@@ -126,19 +147,19 @@ export const ChargeLadderModal: React.FC<ChargeLadderModalProps> = ({
           </table>
         </div>
 
-        <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Close</button>
+        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button
+            onClick={handleExportCSV}
+            className="btn-action"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', cursor: 'pointer' }}
+          >
+            <Download size={13} />
+            <span>Export Ladder CSV</span>
+          </button>
+          <button onClick={onClose} className="btn-secondary" style={{ cursor: 'pointer' }}>Close</button>
         </div>
       </div>
     </div>
   );
 };
 
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
-};

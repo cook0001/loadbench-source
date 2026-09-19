@@ -135,11 +135,7 @@ export const PowderCompareModal: React.FC<PowderCompareModalProps> = ({
 
           {/* Results Table */}
           <div style={{ overflowX: 'auto', border: '1px solid var(--border-color)', borderRadius: '6px' }}>
-            <table style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '11px',
-              fontFamily: 'var(--font-mono)',
+            <table className="ladder-table" style={{
               textAlign: 'right',
             }}>
               <thead>
@@ -182,7 +178,7 @@ export const PowderCompareModal: React.FC<PowderCompareModalProps> = ({
                         }}
                       >
                         <td style={{ padding: '8px 10px', textAlign: 'left', fontWeight: 600, color: isTop ? 'var(--status-safe)' : 'var(--text-primary)' }}>
-                          {item.propellant_name} {isTop ? '★ Top Performer' : ''}
+                          {item.propellant_name} {isTop ? '[Top Performer]' : ''}
                         </td>
                         <td style={{ padding: '8px 10px', textAlign: 'left', color: 'var(--text-muted)' }}>
                           {item.manufacturer}
@@ -234,18 +230,10 @@ export const PowderCompareModal: React.FC<PowderCompareModalProps> = ({
         </div>
 
         <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Close</button>
+          <button onClick={onClose} className="btn-secondary">Close</button>
         </div>
       </div>
     </div>
   );
 };
 
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
-};

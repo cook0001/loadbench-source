@@ -59,7 +59,7 @@ export const CustomWildcatModal: React.FC<CustomWildcatModalProps> = ({
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -179,19 +179,11 @@ export const CustomWildcatModal: React.FC<CustomWildcatModalProps> = ({
 
           <button
             onClick={handleSave}
+            className="btn-primary"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              backgroundColor: 'var(--accent-blue)',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '5px',
+              width: '100%',
               padding: '10px',
-              fontWeight: 700,
               fontSize: '12px',
-              cursor: 'pointer',
               marginTop: '6px',
             }}
           >
@@ -200,19 +192,8 @@ export const CustomWildcatModal: React.FC<CustomWildcatModalProps> = ({
           </button>
         </div>
 
-        <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', padding: '10px 16px', display: 'flex', justifyContent: 'flex-end' }}>
-          <button
-            onClick={onClose}
-            style={{
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '4px',
-              padding: '6px 14px',
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
-          >
+        <div className="modal-footer">
+          <button onClick={onClose} className="btn-secondary">
             Cancel
           </button>
         </div>

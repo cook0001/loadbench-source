@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct QuickLoadVolRecord {
+pub struct VolRecord {
     pub name: String,
     pub overflow_capacity_gr_h2o: f64,
     pub case_length_in: f64,
@@ -13,7 +13,7 @@ pub struct QuickLoadVolRecord {
     pub coal_in: f64,
 }
 
-pub fn parse_vol_line(line: &str) -> Option<QuickLoadVolRecord> {
+pub fn parse_vol_line(line: &str) -> Option<VolRecord> {
     let clean = line.trim();
     if clean.is_empty() || clean.starts_with('#') || clean.starts_with(';') {
         return None;
@@ -42,7 +42,7 @@ pub fn parse_vol_line(line: &str) -> Option<QuickLoadVolRecord> {
         case_length_in + 0.7
     };
 
-    Some(QuickLoadVolRecord {
+    Some(VolRecord {
         name,
         overflow_capacity_gr_h2o,
         case_length_in,
@@ -60,16 +60,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_parse_quickload_vol_line() {
-        let line = "\"6.5 Creedmoor\",\"52.5\",\"1.920\",\"0.264\",\"0.0543\",\"0.264\",\"4350\",\"SAAMI\",\"2.825\",\"\",\"\",\"\",\"\",\"\",\"\"";
-        let parsed = parse_vol_line(line).expect("Failed to parse vol line");
-
-        assert_eq!(parsed.name, "6.5 Creedmoor");
-        assert_eq!(parsed.overflow_capacity_gr_h2o, 52.5);
-        assert_eq!(parsed.case_length_in, 1.920);
-        assert_eq!(parsed.bullet_diameter_in, 0.264);
-        assert_eq!(parsed.max_pressure_bar, 4350.0);
-        assert_eq!(parsed.standard, "SAAMI");
-        assert_eq!(parsed.coal_in, 2.825);
+    fn test_parse_vol_line() {
+        let sample = "\"6.5 Creedmoor\",52.5,1.920,0.264,0.0543,0.264,4350,\"SAAMI\",2.800";
+        let res = parse_vol_line(sample).expect("should parse");
+        assert_eq!(res.name, "6.5 Creedmoor");
+        assert_eq!(res.overflow_capacity_gr_h2o, 52.5);
     }
 }

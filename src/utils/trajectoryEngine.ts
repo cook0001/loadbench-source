@@ -1,5 +1,5 @@
 /**
- * Downrange Exterior Ballistics Engine (QuickTARGET bridge).
+ * Downrange Exterior Ballistics Engine.
  * Uses modified Point-Mass ODE integration with G1 / G7 drag deceleration to compute
  * bullet drop, MOA/MIL come-ups, velocity decay, kinetic energy, 10mph wind drift,
  * and Maximum Point Blank Range (MPBR).

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { X, Compass } from 'lucide-react';
+import { X, Compass, Download } from 'lucide-react';
 import { calculateDownrangeTrajectory, TrajectoryResult } from '../../utils/trajectoryEngine';
 
 interface TrajectoryModalProps {
@@ -50,8 +50,44 @@ export const TrajectoryModal: React.FC<TrajectoryModalProps> = ({
 
   if (!isOpen) return null;
 
+  const handleExportCSV = () => {
+    const headers = [
+      'Range_Yards',
+      'Drop_Inches',
+      'Elevation_MOA',
+      'Elevation_MIL',
+      'Velocity_fps',
+      'Energy_ft_lbs',
+      'Time_of_Flight_s',
+      'Wind_Drift_Inches',
+      'Wind_Drift_MOA',
+    ];
+    const rows = trajectory.steps.map((s) => [
+      s.rangeYards,
+      s.dropInches.toFixed(2),
+      s.elevationMoa.toFixed(2),
+      s.elevationMils.toFixed(2),
+      s.velocityFps,
+      s.energyFtLbs,
+      s.timeOfFlightSec.toFixed(3),
+      s.windDriftInches.toFixed(2),
+      s.windDriftMoa.toFixed(2),
+    ]);
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safeCartridge = cartridgeName.replace(/[^a-zA-Z0-9_-]/g, '_');
+    a.download = `Trajectory_${safeCartridge}_${zeroRangeYards}yd_zero.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -61,7 +97,7 @@ export const TrajectoryModal: React.FC<TrajectoryModalProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Compass size={18} color="var(--accent-cyan)" />
             <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700 }}>
-              Downrange Trajectory &amp; Drop Table (QuickTARGET)
+              Downrange Trajectory &amp; Drop Table (Exterior Ballistics)
             </h3>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
@@ -262,19 +298,16 @@ export const TrajectoryModal: React.FC<TrajectoryModalProps> = ({
           </div>
         </div>
 
-        <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', padding: '10px 16px', display: 'flex', justifyContent: 'flex-end' }}>
+        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button
-            onClick={onClose}
-            style={{
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '4px',
-              padding: '6px 14px',
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
+            onClick={handleExportCSV}
+            className="btn-action"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', cursor: 'pointer' }}
           >
+            <Download size={13} />
+            <span>Export Trajectory CSV</span>
+          </button>
+          <button onClick={onClose} className="btn-secondary" style={{ cursor: 'pointer' }}>
             Close
           </button>
         </div>

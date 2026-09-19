@@ -4,10 +4,13 @@ import { CartridgeSpec } from '../../types/cartridge';
 import { PropellantSpec } from '../../types/propellant';
 import { ProjectileSpec } from '../../types/projectile';
 import { 
-  parseQuickDesignQDF, 
-  parseQuickLoadVOL, 
-  parseQuickLoadPRO, 
-  parseQuickLoadBUL 
+  parseUniversalQDF, 
+  parseWildcatSpecJSON,
+  parseLoadBenchRecipeJSON,
+  ParsedLoadBenchRecipe,
+  parseLegacyVolRecord, 
+  parseLegacyProRecord, 
+  parseLegacyBulRecord 
 } from '../../utils/fileParsers';
 
 interface ImportModalProps {
@@ -16,6 +19,7 @@ interface ImportModalProps {
   onImportCartridge: (cartridge: CartridgeSpec) => void;
   onImportPropellants?: (propellants: PropellantSpec[]) => void;
   onImportProjectiles?: (projectiles: ProjectileSpec[]) => void;
+  onImportLoadRecipe?: (recipe: ParsedLoadBenchRecipe) => void;
 }
 
 export const ImportModal: React.FC<ImportModalProps> = ({
@@ -24,6 +28,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   onImportCartridge,
   onImportPropellants,
   onImportProjectiles,
+  onImportLoadRecipe,
 }) => {
   const [inputText, setInputText] = useState('');
   const [fileName, setFileName] = useState('');
@@ -35,13 +40,39 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     setErrorMsg(null);
     const trimmed = inputText.trim();
     if (!trimmed) {
-      setErrorMsg('Please paste the contents of a .qdf, .vol, .pro, or .bul file.');
+      setErrorMsg('Please paste the contents of a .wildcat, .loadbench, .qdf, .vol, .pro, or .bul file.');
       return;
     }
 
-    // 1. Try QDF (Wildcat Studio)
+    // 1. Try Native Wildcat Studio (.wildcat / .wcs) JSON
+    if (trimmed.startsWith('{') && (trimmed.includes('wildcat_cartridge_specification') || trimmed.includes('wildcat-cartridge-v1.json'))) {
+      const wildcatParsed = parseWildcatSpecJSON(trimmed);
+      if (wildcatParsed && wildcatParsed.name) {
+        onImportCartridge(wildcatParsed as CartridgeSpec);
+        onClose();
+        return;
+      }
+    }
+
+    // 2. Try Native LoadBench Recipe (.loadbench / .ldb) JSON
+    if (trimmed.startsWith('{') && (trimmed.includes('loadbench_recipe') || trimmed.includes('loadbench-recipe-v1.json') || (trimmed.includes('"cartridge"') && trimmed.includes('"propellant"')))) {
+      const recipeParsed = parseLoadBenchRecipeJSON(trimmed);
+      if (recipeParsed) {
+        if (onImportLoadRecipe) {
+          onImportLoadRecipe(recipeParsed);
+          onClose();
+          return;
+        } else if (recipeParsed.cartridge) {
+          onImportCartridge(recipeParsed.cartridge as CartridgeSpec);
+          onClose();
+          return;
+        }
+      }
+    }
+
+    // 3. Try Universal QDF (Wildcat Studio)
     if (trimmed.includes('[Cartridge]') || trimmed.includes('OverflowCapacity_grH2O=')) {
-      const parsed = parseQuickDesignQDF(trimmed);
+      const parsed = parseUniversalQDF(trimmed);
       if (parsed && parsed.name) {
         onImportCartridge(parsed as CartridgeSpec);
         onClose();
@@ -49,9 +80,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       }
     }
 
-    // 2. Try PRO (QuickLOAD Powders)
+    // 4. Try PRO (Propellant Library)
     if (fileName.endsWith('.pro') || (!trimmed.startsWith('[Cartridge]') && trimmed.includes('","') && (trimmed.includes('Vihtavuori') || trimmed.includes('Hodgdon') || trimmed.includes('Alliant') || trimmed.includes('IMR') || trimmed.includes('Norma') || trimmed.includes('Accurate')))) {
-      const proParsed = parseQuickLoadPRO(trimmed);
+      const proParsed = parseLegacyProRecord(trimmed);
       if (proParsed && proParsed.length > 0) {
         if (onImportPropellants) {
           onImportPropellants(proParsed as PropellantSpec[]);
@@ -61,9 +92,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       }
     }
 
-    // 3. Try BUL (QuickLOAD Projectiles)
+    // 5. Try BUL (Projectile Library)
     if (fileName.endsWith('.bul') || (trimmed.includes('","') && (trimmed.includes('Hornady') || trimmed.includes('Sierra') || trimmed.includes('Berger') || trimmed.includes('Lapua') || trimmed.includes('Nosler') || trimmed.includes('Barnes')))) {
-      const bulParsed = parseQuickLoadBUL(trimmed);
+      const bulParsed = parseLegacyBulRecord(trimmed);
       if (bulParsed && bulParsed.length > 0) {
         if (onImportProjectiles) {
           onImportProjectiles(bulParsed as ProjectileSpec[]);
@@ -73,8 +104,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       }
     }
 
-    // 4. Try QuickLOAD .vol (Cartridge)
-    const volParsed = parseQuickLoadVOL(trimmed);
+    // 6. Try .vol (Cartridge)
+    const volParsed = parseLegacyVolRecord(trimmed);
     if (volParsed && volParsed.name) {
       onImportCartridge(volParsed as CartridgeSpec);
       onClose();
@@ -82,21 +113,29 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     }
 
     // Fallback: try PRO or BUL if not tried already
-    const proParsedFallback = parseQuickLoadPRO(trimmed);
+    const proParsedFallback = parseLegacyProRecord(trimmed);
     if (proParsedFallback && proParsedFallback.length > 0 && onImportPropellants) {
       onImportPropellants(proParsedFallback as PropellantSpec[]);
       onClose();
       return;
     }
 
-    const bulParsedFallback = parseQuickLoadBUL(trimmed);
+    const bulParsedFallback = parseLegacyBulRecord(trimmed);
     if (bulParsedFallback && bulParsedFallback.length > 0 && onImportProjectiles) {
       onImportProjectiles(bulParsedFallback as ProjectileSpec[]);
       onClose();
       return;
     }
 
-    setErrorMsg('Unable to parse file. Please ensure it is a valid QuickDESIGN (.qdf) or QuickLOAD (.vol / .pro / .bul) record.');
+    // Fallback: try wildcat json
+    const wildcatFallback = parseWildcatSpecJSON(trimmed);
+    if (wildcatFallback && wildcatFallback.name) {
+      onImportCartridge(wildcatFallback as CartridgeSpec);
+      onClose();
+      return;
+    }
+
+    setErrorMsg('Unable to parse file. Please ensure it is a valid Wildcat Studio (.wildcat / .qdf), LoadBench (.loadbench / .ldb), or standard ballistics record.');
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +160,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FileUp size={16} color="var(--accent-cyan)" />
             <span style={{ fontSize: '13px', fontWeight: 600 }}>
-              Import Data (.qdf / .vol / .pro / .bul)
+              Import Data (.wildcat / .loadbench / .qdf / .vol / .pro / .bul)
             </span>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)' }}>
@@ -131,7 +170,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
         <div className="modal-body" style={{ gap: '12px' }}>
           <div style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-            Import cartridge designs directly from <strong>Wildcat Studio</strong> (<code>.qdf</code>), or QuickLOAD cartridges (<code>.vol</code>), powders (<code>.pro</code>), and projectiles (<code>.bul</code>).
+            Import cartridge designs directly from <strong>Wildcat Studio</strong> (<code>.wildcat</code> / <code>.wcs</code> / <code>.qdf</code>), complete handload recipes (<code>.loadbench</code> / <code>.ldb</code>), or standard ballistics powders (<code>.pro</code>) and projectiles (<code>.bul</code>).
           </div>
 
           <div>
@@ -140,7 +179,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             </label>
             <input
               type="file"
-              accept=".qdf,.vol,.pro,.bul,.dat,.txt"
+              accept=".wildcat,.wcs,.loadbench,.ldb,.qdf,.vol,.pro,.bul,.dat,.txt,.json"
               onChange={handleFileUpload}
               style={{
                 fontSize: '12px',
@@ -155,7 +194,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               className="input-control"
               rows={8}
               style={{ resize: 'vertical', fontFamily: 'var(--font-mono)', fontSize: '11px' }}
-              placeholder="; Paste QuickDESIGN .qdf, QuickLOAD .vol, .pro, or .bul data..."
+              placeholder="Paste Wildcat Studio (.wildcat / .qdf), LoadBench (.loadbench), or standard .vol, .pro, or .bul data..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
             />
@@ -180,21 +219,13 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         </div>
 
         <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Cancel</button>
+          <button onClick={onClose} className="btn-secondary">Cancel</button>
           <button
             onClick={handleProcessImport}
+            className="btn-primary"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'var(--accent-cyan)',
-              color: '#000',
-              border: 'none',
-              borderRadius: '4px',
               padding: '6px 16px',
               fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
             }}
           >
             <Check size={14} />
@@ -206,11 +237,3 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   );
 };
 
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
-};

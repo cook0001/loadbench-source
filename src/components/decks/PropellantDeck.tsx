@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Flame, Sparkles, Database, BookOpen } from 'lucide-react';
+import { Flame, Zap, Sparkles } from 'lucide-react';
 import { PropellantSpec } from '../../types/propellant';
 import { formatWeight } from '../../utils/formatters';
 
@@ -15,8 +15,8 @@ interface PropellantDeckProps {
   baOffsetPct: number;
   onChangeBaOffsetPct: (val: number) => void;
   isMetric: boolean;
-  onOpenPowderDB?: () => void;
-  onOpenManufacturerMatch?: () => void;
+  onOpenChargeSolver?: () => void;
+  onOpenBurnChart?: () => void;
 }
 
 export const PropellantDeck: React.FC<PropellantDeckProps> = ({
@@ -31,8 +31,8 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
   baOffsetPct,
   onChangeBaOffsetPct,
   isMetric,
-  onOpenPowderDB,
-  onOpenManufacturerMatch,
+  onOpenChargeSolver,
+  onOpenBurnChart,
 }) => {
   const [brandFilter, setBrandFilter] = useState<string>('all');
 
@@ -69,93 +69,68 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
       <div className="deck-header">
         <div className="deck-title">
           <Flame size={14} color="#f97316" style={{ flexShrink: 0 }} />
-          <span>3. Propellant & Powder Charge</span>
+          <span>3. Propellant &amp; Powder Charge</span>
         </div>
-        <span style={{ fontSize: '10px', color: 'var(--text-muted)', flexShrink: 0 }}>
+        <span style={{ fontSize: '10px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
           {propellant.chemical_base === 'double_base' ? 'Double-Base' : 'Single-Base'} &bull; {propellant.grain_geometry} {propellant.vmd_cc_gr ? `(${propellant.vmd_cc_gr} cc/gr)` : ''}
         </span>
       </div>
 
-      {/* Powder Selector & Brand Filter */}
-      <div className="input-field">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px', gap: '6px' }}>
-          <label className="input-label" style={{ marginBottom: 0 }}>
-            Select Propellant ({filteredPropellants.length} of {propellants.length})
+      {/* Brand Filter & Burn Chart Shortcut */}
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', marginBottom: '8px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <label className="input-label" style={{ margin: 0, marginBottom: '2px' }}>
+            Propellant Manufacturer Filter
           </label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <select
-              value={brandFilter}
-              onChange={(e) => setBrandFilter(e.target.value)}
-              style={{
-                backgroundColor: 'var(--bg-secondary)',
-                color: 'var(--accent-cyan)',
-                border: '1px solid var(--border-color)',
-                borderRadius: '4px',
-                fontSize: '10px',
-                padding: '2px 6px',
-                fontFamily: 'var(--font-mono)',
-                cursor: 'pointer',
-                outline: 'none',
-              }}
-            >
-              <option value="all">All Brands ({propellants.length})</option>
-              {manufacturers.map(m => (
-                <option key={m} value={m}>
-                  {m} ({propellants.filter(p => p.manufacturer === m).length})
-                </option>
-              ))}
-            </select>
-            {onOpenPowderDB && (
-              <button
-                type="button"
-                onClick={onOpenPowderDB}
-                title="Open Complete Propellant Database Viewer"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  backgroundColor: 'rgba(6, 182, 212, 0.12)',
-                  color: 'var(--accent-cyan)',
-                  border: '1px solid rgba(6, 182, 212, 0.3)',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  padding: '2px 6px',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <Database size={11} />
-                <span>Viewer</span>
-              </button>
-            )}
-            {onOpenManufacturerMatch && (
-              <button
-                type="button"
-                onClick={onOpenManufacturerMatch}
-                title="Match & Reverse-Solve with Published Manufacturer Factory Data"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                  color: 'var(--status-safe)',
-                  border: '1px solid rgba(16, 185, 129, 0.3)',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  padding: '2px 6px',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <BookOpen size={11} />
-                <span>Lab Match</span>
-              </button>
-            )}
-          </div>
+          <select
+            className="input-control"
+            value={brandFilter}
+            onChange={(e) => setBrandFilter(e.target.value)}
+            style={{ fontSize: '11px', padding: '5px 8px', width: '100%' }}
+          >
+            <option value="all">All Brands ({propellants.length} Powders)</option>
+            {manufacturers.map(m => (
+              <option key={m} value={m}>
+                {m} ({propellants.filter(p => p.manufacturer === m).length})
+              </option>
+            ))}
+          </select>
         </div>
+        {onOpenBurnChart && (
+          <button
+            type="button"
+            onClick={onOpenBurnChart}
+            className="btn-action"
+            style={{
+              height: '30px',
+              fontSize: '11px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '0 10px',
+              flexShrink: 0,
+              backgroundColor: 'rgba(245, 158, 11, 0.12)',
+              color: 'var(--accent-gold)',
+              borderColor: 'rgba(245, 158, 11, 0.3)',
+            }}
+            title="Open Relative Powder Burn Rate Ranking Spectrum Chart"
+          >
+            <Flame size={13} />
+            <span>Burn Chart</span>
+          </button>
+        )}
+      </div>
 
+      {/* Propellant Selector */}
+      <div className="input-field">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+          <label className="input-label" style={{ margin: 0 }}>
+            Select Propellant ({filteredPropellants.length} Available)
+          </label>
+          <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)' }}>
+            Ba: {propellant.burn_rate_ba.toFixed(4)} 1/bar·s
+          </span>
+        </div>
         <select
           className="input-control"
           value={propellant.id}
@@ -180,7 +155,31 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
       {/* Charge Weight Slider & Stepper */}
       <div className="input-field">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-          <label className="input-label">Charge Weight</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <label className="input-label" style={{ margin: 0 }}>Charge Weight</label>
+            {onOpenChargeSolver && (
+              <button
+                type="button"
+                onClick={onOpenChargeSolver}
+                className="badge-btn"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  padding: '1px 6px',
+                  fontSize: '9px',
+                  fontWeight: 700,
+                  backgroundColor: 'rgba(6, 182, 212, 0.16)',
+                  color: 'var(--accent-cyan)',
+                  borderColor: 'rgba(6, 182, 212, 0.4)',
+                }}
+                title="Open Safe Working Range & Charge Solver"
+              >
+                <Zap size={10} />
+                <span>Charge Solver</span>
+              </button>
+            )}
+          </div>
           <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent-cyan)' }}>
             {formatWeight(chargeGrains, 1, isMetric)}
           </span>
@@ -265,8 +264,8 @@ export const PropellantDeck: React.FC<PropellantDeckProps> = ({
             flexShrink: 0
           }}>
             {powderTemperatureF}°F {isMetric && `(${Math.round((powderTemperatureF - 32) * (5/9))}°C)`}
-            {powderTemperatureF > 100 && ' ⚠ HOT'}
-            {powderTemperatureF < 32 && ' ❄ COLD'}
+            {powderTemperatureF > 100 && ' [HOT]'}
+            {powderTemperatureF < 32 && ' [COLD]'}
           </span>
         </div>
         <div className="slider-container">

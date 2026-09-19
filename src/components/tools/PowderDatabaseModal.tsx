@@ -133,11 +133,7 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', flex: 1, minHeight: 0, overflow: 'hidden' }}>
           {/* Left Table: Propellant Browser List */}
           <div style={{ overflowY: 'auto', borderRight: '1px solid var(--border-color)' }}>
-            <table style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '11px',
-              fontFamily: 'var(--font-mono)',
+            <table className="ladder-table" style={{
               textAlign: 'right',
             }}>
               <thead>
@@ -363,7 +359,7 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
                         marginBottom: '4px',
                       }}>
                         <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                          {ref.cartridge_name} &bull; {ref.charge_grains} gr ➔ {ref.muzzle_velocity_fps} fps
+                          {ref.cartridge_name} &bull; {ref.charge_grains} gr &rarr; {ref.muzzle_velocity_fps} fps
                         </div>
                         <div style={{ color: 'var(--text-muted)' }}>
                           {ref.bullet_weight_grains} gr {ref.bullet_name} | {ref.max_pressure_psi.toLocaleString()} psi ({ref.source})
@@ -397,18 +393,10 @@ export const PowderDatabaseModal: React.FC<PowderDatabaseModalProps> = ({
 
         {/* Footer */}
         <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Close</button>
+          <button onClick={onClose} className="btn-secondary">Close</button>
         </div>
       </div>
     </div>
   );
 };
 
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
-};

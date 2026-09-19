@@ -139,23 +139,11 @@ export const ChronoTruingModal: React.FC<ChronoTruingModalProps> = ({
         </div>
 
         <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Cancel</button>
+          <button onClick={onClose} className="btn-secondary">Cancel</button>
           {calibrationResult && (
             <button
               onClick={handleApply}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                backgroundColor: 'var(--status-safe)',
-                color: '#000',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '6px 14px',
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
+              className="btn-success"
             >
               <Check size={14} />
               <span>Apply Calibrated Ba</span>
@@ -167,11 +155,3 @@ export const ChronoTruingModal: React.FC<ChronoTruingModalProps> = ({
   );
 };
 
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
-};

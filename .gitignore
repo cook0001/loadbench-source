@@ -25,3 +25,8 @@ dist-ssr
 
 # Tauri build artifacts
 src-tauri/target
+
+# AI Agent rules & configurations
+.agents/
+AGENTS.md
+agents.md

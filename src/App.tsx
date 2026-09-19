@@ -33,7 +33,8 @@ import { PropellantDeck } from './components/decks/PropellantDeck';
 import { DiagnosticsDeck } from './components/decks/DiagnosticsDeck';
 import { BallisticsChart } from './components/charts/BallisticsChart';
 
-// Modals
+// Modals & Tools
+import { SafeChargeSolverModal } from './components/tools/SafeChargeSolverModal';
 import { ChargeLadderModal } from './components/tools/ChargeLadderModal';
 import { PowderCompareModal } from './components/tools/PowderCompareModal';
 import { OBTModal } from './components/tools/OBTModal';
@@ -48,6 +49,23 @@ import { CaseWaterWeightModal } from './components/tools/CaseWaterWeightModal';
 import { CustomWildcatModal } from './components/tools/CustomWildcatModal';
 import { ImportModal } from './components/modals/ImportModal';
 import { ExportReportModal } from './components/modals/ExportReportModal';
+import { CartridgeSelectorModal } from './components/modals/CartridgeSelectorModal';
+import { SaveLoadProjectModal } from './components/modals/SaveLoadProjectModal';
+import { parseLoadBenchRecipeJSON, parseWildcatSpecJSON, ParsedLoadBenchRecipe } from './utils/fileParsers';
+import { AmmoCanLabelModal } from './components/tools/AmmoCanLabelModal';
+import { BatchCostModal } from './components/tools/BatchCostModal';
+import { CartridgeCompareModal } from './components/tools/CartridgeCompareModal';
+import { ThermalStabilityModal } from './components/tools/ThermalStabilityModal';
+import { BackupRestoreModal } from './components/tools/BackupRestoreModal';
+import { SettingsModal, DEFAULT_SETTINGS, LoadBenchSettings } from './components/tools/SettingsModal';
+import { UserManualModal } from './components/tools/UserManualModal';
+import { LegalDisclaimerModal } from './components/tools/LegalDisclaimerModal';
+import { EcosystemModal } from './components/tools/EcosystemModal';
+import { PrimerDatabaseModal } from './components/tools/PrimerDatabaseModal';
+import { PowderBurnChartModal } from './components/tools/PowderBurnChartModal';
+import { BulletJumpModal } from './components/tools/BulletJumpModal';
+import { RangeCardModal } from './components/tools/RangeCardModal';
+import { PowderMeasureModal } from './components/tools/PowderMeasureModal';
 
 export const App: React.FC = () => {
   const leftPanelRef = useRef<HTMLElement | null>(null);
@@ -149,6 +167,7 @@ export const App: React.FC = () => {
   }, []);
 
   // Modal Visibility States
+  const [isChargeSolverOpen, setIsChargeSolverOpen] = useState<boolean>(false);
   const [isLadderOpen, setIsLadderOpen] = useState<boolean>(false);
   const [isCompareOpen, setIsCompareOpen] = useState<boolean>(false);
   const [isPowderDBOpen, setIsPowderDBOpen] = useState<boolean>(false);
@@ -163,6 +182,66 @@ export const App: React.FC = () => {
   const [isWildcatOpen, setIsWildcatOpen] = useState<boolean>(false);
   const [isImportOpen, setIsImportOpen] = useState<boolean>(false);
   const [isExportOpen, setIsExportOpen] = useState<boolean>(false);
+  const [isCartridgeSelectorOpen, setIsCartridgeSelectorOpen] = useState<boolean>(false);
+  const [isAmmoCanLabelOpen, setIsAmmoCanLabelOpen] = useState<boolean>(false);
+  const [isBatchCostOpen, setIsBatchCostOpen] = useState<boolean>(false);
+  const [isCartridgeCompareOpen, setIsCartridgeCompareOpen] = useState<boolean>(false);
+  const [isThermalStabilityOpen, setIsThermalStabilityOpen] = useState<boolean>(false);
+  const [isBackupRestoreOpen, setIsBackupRestoreOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isUserManualOpen, setIsUserManualOpen] = useState<boolean>(false);
+  const [isLegalDisclaimerOpen, setIsLegalDisclaimerOpen] = useState<boolean>(false);
+  const [isEcosystemOpen, setIsEcosystemOpen] = useState<boolean>(false);
+  const [isPrimerDBOpen, setIsPrimerDBOpen] = useState<boolean>(false);
+  const [isBurnChartOpen, setIsBurnChartOpen] = useState<boolean>(false);
+  const [isBulletJumpOpen, setIsBulletJumpOpen] = useState<boolean>(false);
+  const [isRangeCardOpen, setIsRangeCardOpen] = useState<boolean>(false);
+  const [isPowderMeasureOpen, setIsPowderMeasureOpen] = useState<boolean>(false);
+  const [isSaveLoadProjectOpen, setIsSaveLoadProjectOpen] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // User Settings State
+  const [settings, setSettings] = useState<LoadBenchSettings>(() => {
+    try {
+      const saved = localStorage.getItem('loadbench_settings');
+      return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
+    } catch {
+      return DEFAULT_SETTINGS;
+    }
+  });
+
+  const handleSaveSettings = (newSettings: LoadBenchSettings) => {
+    setSettings(newSettings);
+    setIsMetric(newSettings.isMetric);
+    try {
+      localStorage.setItem('loadbench_settings', JSON.stringify(newSettings));
+    } catch (e) {
+      console.error('Failed to persist settings:', e);
+    }
+  };
+
+  // Global Keyboard Shortcuts (Ctrl+O, Ctrl+S, Ctrl+P, Ctrl+I)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'o') {
+          e.preventDefault();
+          setIsCartridgeSelectorOpen(true);
+        } else if (e.key === 's') {
+          e.preventDefault();
+          setIsSaveLoadProjectOpen(true);
+        } else if (e.key === 'p') {
+          e.preventDefault();
+          setIsExportOpen(true);
+        } else if (e.key === 'i') {
+          e.preventDefault();
+          setIsImportOpen(true);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Cartridge Selection Handler
   const handleSelectCartridge = (newCartridge: CartridgeSpec) => {
@@ -382,15 +461,168 @@ export const App: React.FC = () => {
     }));
   };
 
+  // Backup, Restore & Swap Handlers
+  const handleRestoreAll = (
+    c: CartridgeSpec[],
+    p: PropellantSpec[],
+    b: ProjectileSpec[],
+    settings?: Record<string, any>
+  ) => {
+    setCustomCartridges(c);
+    setCustomPropellants(p);
+    setCustomProjectiles(b);
+    try {
+      localStorage.setItem('loadbench_custom_cartridges', JSON.stringify(c));
+      localStorage.setItem('loadbench_custom_propellants', JSON.stringify(p));
+      localStorage.setItem('loadbench_custom_projectiles', JSON.stringify(b));
+      if (settings) {
+        localStorage.setItem('loadbench_settings', JSON.stringify(settings));
+        if (settings.unitSystem === 'metric') setIsMetric(true);
+        if (settings.unitSystem === 'imperial') setIsMetric(false);
+      }
+    } catch (e) {
+      console.error('Failed to save restored data:', e);
+    }
+  };
+
+  const handleResetFactory = () => {
+    setCustomCartridges([]);
+    setCustomPropellants([]);
+    setCustomProjectiles([]);
+    try {
+      localStorage.removeItem('loadbench_custom_cartridges');
+      localStorage.removeItem('loadbench_custom_propellants');
+      localStorage.removeItem('loadbench_custom_projectiles');
+    } catch (e) {
+      console.error('Failed to reset factory data:', e);
+    }
+  };
+
+  const handleLoadLoadBIntoWorkbench = (
+    c: CartridgeSpec,
+    b: ProjectileSpec,
+    p: PropellantSpec,
+    charge: number,
+    barrel: number
+  ) => {
+    handleSelectCartridge(c);
+    setProjectile(b);
+    setPropellant(p);
+    setChargeGrains(charge);
+    setBarrelLength(barrel);
+    setSeatingDepth(b.default_seating_depth_in);
+  };
+
+  // Save Load Recipe (.loadbench / .ldb)
+  const handleSaveLoadProject = () => {
+    setIsSaveLoadProjectOpen(true);
+  };
+
+  // Open Load Recipe (.loadbench / .ldb / .wildcat / .load)
+  const handleOpenLoadProject = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleImportLoadRecipe = (recipe: ParsedLoadBenchRecipe) => {
+    if (recipe.cartridge) {
+      const fullCartridge = {
+        default_barrel_length_in: 24.0,
+        ...recipe.cartridge,
+      } as CartridgeSpec;
+      handleSaveCustomWildcat(fullCartridge);
+    }
+    if (recipe.projectile) {
+      const fullProj = recipe.projectile as ProjectileSpec;
+      setCustomProjectiles(prev => {
+        const map = new Map<string, ProjectileSpec>();
+        prev.forEach(p => map.set(p.id, p));
+        if (fullProj.id) map.set(fullProj.id, fullProj);
+        const updated = Array.from(map.values());
+        try {
+          localStorage.setItem('loadbench_custom_projectiles', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+      setProjectile(fullProj);
+    }
+    if (recipe.propellant) {
+      const fullProp = recipe.propellant as PropellantSpec;
+      setCustomPropellants(prev => {
+        const map = new Map<string, PropellantSpec>();
+        prev.forEach(p => map.set(p.id, p));
+        if (fullProp.id) map.set(fullProp.id, fullProp);
+        const updated = Array.from(map.values());
+        try {
+          localStorage.setItem('loadbench_custom_propellants', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+      setPropellant(fullProp);
+    }
+    if (typeof recipe.chargeGrains === 'number') setChargeGrains(recipe.chargeGrains);
+    if (typeof recipe.barrelLengthInches === 'number') setBarrelLength(recipe.barrelLengthInches);
+    if (typeof recipe.barrelTwistInches === 'number') setBarrelTwistInches(recipe.barrelTwistInches);
+    if (typeof recipe.seatingDepthInches === 'number') setSeatingDepth(recipe.seatingDepthInches);
+    if (recipe.primer) setSelectedPrimer(recipe.primer as PrimerSpec);
+    if (recipe.primerPocket) setSelectedPrimerPocket(recipe.primerPocket);
+    if (typeof recipe.powderTemperatureF === 'number') setPowderTemperatureF(recipe.powderTemperatureF);
+    if (typeof recipe.isTouchingLands === 'boolean') setIsTouchingLands(recipe.isTouchingLands);
+    if (typeof recipe.baOffsetPct === 'number') setBaOffsetPct(recipe.baOffsetPct);
+  };
+
+  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        // 1. Try parsing native LoadBench recipe (.loadbench / .ldb)
+        const parsedRecipe = parseLoadBenchRecipeJSON(text);
+        if (parsedRecipe) {
+          handleImportLoadRecipe(parsedRecipe);
+          return;
+        }
+        // 2. Try parsing Wildcat Studio spec (.wildcat / .wcs)
+        const parsedWildcat = parseWildcatSpecJSON(text);
+        if (parsedWildcat && parsedWildcat.name) {
+          handleSaveCustomWildcat(parsedWildcat as CartridgeSpec);
+          return;
+        }
+        // 3. Fallback legacy load JSON
+        const data = JSON.parse(text);
+        if (data.cartridge) setCartridge(data.cartridge);
+        if (data.projectile) setProjectile(data.projectile);
+        if (data.propellant) setPropellant(data.propellant);
+        if (data.chargeGrains) setChargeGrains(data.chargeGrains);
+        if (data.barrelLengthInches) setBarrelLength(data.barrelLengthInches);
+        if (data.seatingDepthInches) setSeatingDepth(data.seatingDepthInches);
+        if (data.primer) setSelectedPrimer(data.primer);
+        if (data.primerPocket) setSelectedPrimerPocket(data.primerPocket);
+        if (typeof data.powderTemperatureF === 'number') setPowderTemperatureF(data.powderTemperatureF);
+        if (typeof data.isTouchingLands === 'boolean') setIsTouchingLands(data.isTouchingLands);
+        if (typeof data.baOffsetPct === 'number') setBaOffsetPct(data.baOffsetPct);
+      } catch (err) {
+        console.error('Failed to parse load project file:', err);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   return (
     <div className="app-container">
-      {/* Top Navigation */}
+      {/* Top Navigation Bar with Dropdown Menus */}
       <Navbar
         cartridges={cartridges}
         selectedCartridge={cartridge}
         onSelectCartridge={handleSelectCartridge}
         isMetric={isMetric}
         onToggleUnits={() => setIsMetric(!isMetric)}
+        onOpenCartridgeSelector={() => setIsCartridgeSelectorOpen(true)}
+        onOpenChargeSolver={() => setIsChargeSolverOpen(true)}
         onOpenLadder={() => setIsLadderOpen(true)}
         onOpenCompare={() => setIsCompareOpen(true)}
         onOpenPowderDB={() => setIsPowderDBOpen(true)}
@@ -401,8 +633,26 @@ export const App: React.FC = () => {
         onOpenTrajectory={() => setIsTrajectoryOpen(true)}
         onOpenRecoil={() => setIsRecoilOpen(true)}
         onOpenBarrelStepper={() => setIsBarrelStepperOpen(true)}
+        onOpenCaseWaterModal={() => setIsCaseWaterOpen(true)}
+        onOpenWildcatModal={() => setIsWildcatOpen(true)}
         onOpenImport={() => setIsImportOpen(true)}
         onOpenExport={() => setIsExportOpen(true)}
+        onOpenAmmoCanLabel={() => setIsAmmoCanLabelOpen(true)}
+        onOpenBatchCost={() => setIsBatchCostOpen(true)}
+        onOpenCartridgeCompare={() => setIsCartridgeCompareOpen(true)}
+        onOpenThermalStability={() => setIsThermalStabilityOpen(true)}
+        onOpenBackupRestore={() => setIsBackupRestoreOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenUserManual={() => setIsUserManualOpen(true)}
+        onOpenLegalDisclaimer={() => setIsLegalDisclaimerOpen(true)}
+        onOpenEcosystem={() => setIsEcosystemOpen(true)}
+        onOpenPrimerDB={() => setIsPrimerDBOpen(true)}
+        onOpenBurnChart={() => setIsBurnChartOpen(true)}
+        onOpenBulletJump={() => setIsBulletJumpOpen(true)}
+        onOpenPowderMeasure={() => setIsPowderMeasureOpen(true)}
+        onOpenRangeCard={() => setIsRangeCardOpen(true)}
+        onSaveLoadProject={handleSaveLoadProject}
+        onOpenLoadProject={handleOpenLoadProject}
         onResetToDefaults={handleResetToDefaults}
       />
 
@@ -421,7 +671,6 @@ export const App: React.FC = () => {
             onChangePrimer={setSelectedPrimer}
             primers={primers}
             onOpenCaseWaterModal={() => setIsCaseWaterOpen(true)}
-            onOpenWildcatModal={() => setIsWildcatOpen(true)}
             isMetric={isMetric}
           />
 
@@ -439,7 +688,6 @@ export const App: React.FC = () => {
             usableChamberVolCm3={usableChamberVolCm3}
             muzzleVelocityFps={simulationResult.muzzle_velocity_fps}
             isMetric={isMetric}
-            onOpenProjectileDB={() => setIsProjectileDBOpen(true)}
           />
 
           <PropellantDeck
@@ -454,8 +702,8 @@ export const App: React.FC = () => {
             baOffsetPct={baOffsetPct}
             onChangeBaOffsetPct={setBaOffsetPct}
             isMetric={isMetric}
-            onOpenPowderDB={() => setIsPowderDBOpen(true)}
-            onOpenManufacturerMatch={() => setIsMatchOpen(true)}
+            onOpenChargeSolver={() => setIsChargeSolverOpen(true)}
+            onOpenBurnChart={() => setIsBurnChartOpen(true)}
           />
         </section>
 
@@ -492,7 +740,26 @@ export const App: React.FC = () => {
         cartridgeName={cartridge.name}
       />
 
-      {/* Modals & Diagnostic Tools */}
+      {/* Safe Working Range & Charge Solver */}
+      <SafeChargeSolverModal
+        isOpen={isChargeSolverOpen}
+        onClose={() => setIsChargeSolverOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        currentChargeGrains={chargeGrains}
+        barrelLengthInches={barrelLength}
+        seatingDepthInches={seatingDepth}
+        primer={selectedPrimer}
+        powderTemperatureF={powderTemperatureF}
+        isTouchingLands={isTouchingLands}
+        baOffsetPct={baOffsetPct}
+        onApplyCharge={(charge) => {
+          setChargeGrains(charge);
+        }}
+        isMetric={isMetric}
+      />
+
       <ChargeLadderModal
         isOpen={isLadderOpen}
         onClose={() => setIsLadderOpen(false)}
@@ -643,6 +910,28 @@ export const App: React.FC = () => {
         onImportCartridge={handleImportCartridge}
         onImportPropellants={handleImportPropellants}
         onImportProjectiles={handleImportProjectiles}
+        onImportLoadRecipe={handleImportLoadRecipe}
+      />
+
+      <SaveLoadProjectModal
+        isOpen={isSaveLoadProjectOpen}
+        onClose={() => setIsSaveLoadProjectOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        primer={selectedPrimer}
+        primerPocket={selectedPrimerPocket}
+        chargeGrains={chargeGrains}
+        barrelLengthInches={barrelLength}
+        barrelTwistInches={barrelTwistInches}
+        seatingDepthInches={seatingDepth}
+        powderTemperatureF={powderTemperatureF}
+        isTouchingLands={isTouchingLands}
+        baOffsetPct={baOffsetPct}
+        simulationResult={simulationResult}
+        defaultAuthor={settings.authorName}
+        defaultLotPrefix={settings.defaultLotPrefix}
+        defaultTargetRifle={settings.defaultTargetRifle}
       />
 
       <ExportReportModal
@@ -656,6 +945,193 @@ export const App: React.FC = () => {
         seatingDepth={seatingDepth}
         result={simulationResult}
         isMetric={isMetric}
+      />
+
+      {/* Cartridge Selector Modal (Searchable 385+ cartridges) */}
+      <CartridgeSelectorModal
+        isOpen={isCartridgeSelectorOpen}
+        onClose={() => setIsCartridgeSelectorOpen(false)}
+        cartridges={cartridges}
+        activeCartridge={cartridge}
+        onSelectCartridge={(c) => {
+          handleSelectCartridge(c);
+          setIsCartridgeSelectorOpen(false);
+        }}
+        isMetric={isMetric}
+      />
+
+      {/* Printable Ammo Can & Box Label Generator */}
+      <AmmoCanLabelModal
+        isOpen={isAmmoCanLabelOpen}
+        onClose={() => setIsAmmoCanLabelOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        seatingDepthInches={seatingDepth}
+        primer={selectedPrimer}
+        barrelLengthInches={barrelLength}
+        result={simulationResult}
+        isMetric={isMetric}
+      />
+
+      {/* Batch Cost & Handload Savings Calculator */}
+      <BatchCostModal
+        isOpen={isBatchCostOpen}
+        onClose={() => setIsBatchCostOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        primer={selectedPrimer}
+      />
+
+      {/* Dual Cartridge & Load Head-to-Head Comparison Duel */}
+      <CartridgeCompareModal
+        isOpen={isCartridgeCompareOpen}
+        onClose={() => setIsCartridgeCompareOpen(false)}
+        cartridgeA={cartridge}
+        projectileA={projectile}
+        propellantA={propellant}
+        chargeGrainsA={chargeGrains}
+        barrelLengthA={barrelLength}
+        primerA={selectedPrimer}
+        allCartridges={cartridges}
+        allProjectiles={projectiles}
+        allPropellants={propellants}
+        allPrimers={primers}
+        onLoadLoadBIntoWorkbench={handleLoadLoadBIntoWorkbench}
+        isMetric={isMetric}
+      />
+
+      {/* Thermal Stability & Temperature Drift Analyzer */}
+      <ThermalStabilityModal
+        isOpen={isThermalStabilityOpen}
+        onClose={() => setIsThermalStabilityOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        barrelLengthInches={barrelLength}
+        seatingDepthInches={seatingDepth}
+        primer={selectedPrimer}
+        currentTempF={powderTemperatureF}
+        onApplyTemp={(tempF) => setPowderTemperatureF(tempF)}
+        isMetric={isMetric}
+      />
+
+      {/* Database Backup & Disaster Recovery Manager */}
+      <BackupRestoreModal
+        isOpen={isBackupRestoreOpen}
+        onClose={() => setIsBackupRestoreOpen(false)}
+        customCartridges={customCartridges}
+        customPropellants={customPropellants}
+        customProjectiles={customProjectiles}
+        onRestoreAll={handleRestoreAll}
+        onResetFactory={handleResetFactory}
+      />
+
+      {/* Settings & Simulation Tuning Preferences */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        settings={settings}
+        onSaveSettings={handleSaveSettings}
+      />
+
+      {/* Comprehensive Technical User Manual */}
+      <UserManualModal
+        isOpen={isUserManualOpen}
+        onClose={() => setIsUserManualOpen(false)}
+      />
+
+      {/* Reloading Safety & Legal Simulation Disclaimer */}
+      <LegalDisclaimerModal
+        isOpen={isLegalDisclaimerOpen}
+        onClose={() => setIsLegalDisclaimerOpen(false)}
+      />
+
+      {/* ArmoryVault & Wildcat Studio Ecosystem Bridge */}
+      <EcosystemModal
+        isOpen={isEcosystemOpen}
+        onClose={() => setIsEcosystemOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        barrelLengthInches={barrelLength}
+        seatingDepthInches={seatingDepth}
+        primer={selectedPrimer}
+        result={simulationResult}
+        isMetric={isMetric}
+      />
+
+      {/* Global Primer Library & Ignition Dynamics Explorer */}
+      <PrimerDatabaseModal
+        isOpen={isPrimerDBOpen}
+        onClose={() => setIsPrimerDBOpen(false)}
+        primers={primers}
+        activePrimer={selectedPrimer}
+        onSelectPrimer={(p) => setSelectedPrimer(p)}
+        activePocketSize={selectedPrimerPocket}
+        onChangePocketSize={handleChangePrimerPocket}
+      />
+
+      {/* Relative Powder Burn Rate Ranking Spectrum */}
+      <PowderBurnChartModal
+        isOpen={isBurnChartOpen}
+        onClose={() => setIsBurnChartOpen(false)}
+        propellants={propellants}
+        activePropellant={propellant}
+        onSelectPropellant={(p) => setPropellant(p)}
+      />
+
+      {/* CBTO & Bullet Jump Calculator */}
+      <BulletJumpModal
+        isOpen={isBulletJumpOpen}
+        onClose={() => setIsBulletJumpOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        seatingDepthInches={seatingDepth}
+        onChangeSeatingDepth={setSeatingDepth}
+        isTouchingLands={isTouchingLands}
+        onChangeTouchingLands={setIsTouchingLands}
+        peakPressurePsi={simulationResult.max_pressure_psi}
+        isMetric={isMetric}
+      />
+
+      {/* Printable Benchrest Range Card & Target Sheet */}
+      <RangeCardModal
+        isOpen={isRangeCardOpen}
+        onClose={() => setIsRangeCardOpen(false)}
+        cartridge={cartridge}
+        projectile={projectile}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        seatingDepthInches={seatingDepth}
+        primer={selectedPrimer}
+        barrelLengthInches={barrelLength}
+        result={simulationResult}
+        isMetric={isMetric}
+      />
+
+      {/* Volumetric Powder Measure & VMD Dispenser Calculator */}
+      <PowderMeasureModal
+        isOpen={isPowderMeasureOpen}
+        onClose={() => setIsPowderMeasureOpen(false)}
+        propellant={propellant}
+        chargeGrains={chargeGrains}
+        onChangeChargeGrains={setChargeGrains}
+      />
+
+      {/* Hidden File Input for Loading .load Projects */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".load,.json"
+        style={{ display: 'none' }}
+        onChange={handleFileSelected}
       />
     </div>
   );

@@ -146,7 +146,7 @@ export const BallisticsChart: React.FC<BallisticsChartProps> = ({
 
     ctx.setLineDash([]);
 
-    // 2. Chamber & Barrel Schematic (QuickLOAD Signature Cross-Section)
+    // 2. Chamber & Barrel Schematic Cross-Section
     const barrelY = padding.top + chartHeight + 24;
     const barrelH = 10;
     const chamberEndIn = Math.min(caseLengthInches, maxTravel);

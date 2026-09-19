@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Crosshair, Compass, ShieldCheck, Database } from 'lucide-react';
+import { Crosshair, Compass, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { ProjectileSpec } from '../../types/projectile';
 import { calculateGyroscopicStability, StabilityResult } from '../../utils/stabilityEngine';
 
@@ -17,7 +17,6 @@ interface ProjectileDeckProps {
   usableChamberVolCm3: number;
   muzzleVelocityFps: number;
   isMetric: boolean;
-  onOpenProjectileDB?: () => void;
 }
 
 export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
@@ -34,7 +33,6 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
   usableChamberVolCm3,
   muzzleVelocityFps,
   isMetric,
-  onOpenProjectileDB,
 }) => {
   const [showAllCalibers, setShowAllCalibers] = useState<boolean>(false);
   const [brandFilter, setBrandFilter] = useState<string>('all');
@@ -107,32 +105,22 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
         </div>
       </div>
 
-      {/* Manufacturer Filter & Bullet DB launcher */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-        <div style={{ flex: 1 }}>
-          <label className="input-label" style={{ margin: 0, marginBottom: '2px' }}>Brand Filter</label>
-          <select
-            className="input-control"
-            value={brandFilter}
-            onChange={(e) => setBrandFilter(e.target.value)}
-          >
-            <option value="all">All Brands ({caliberProjectiles.length} in cal)</option>
-            {manufacturers.map(m => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
-        </div>
-        {onOpenProjectileDB && (
-          <button
-            onClick={onOpenProjectileDB}
-            className="btn-action"
-            style={{ alignSelf: 'flex-end', height: '28px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}
-            title="Browse Complete Projectile Database"
-          >
-            <Database size={12} />
-            <span>Bullet DB</span>
-          </button>
-        )}
+      {/* Projectile Brand Filter */}
+      <div className="input-field" style={{ marginBottom: '8px' }}>
+        <label className="input-label" style={{ margin: 0, marginBottom: '2px' }}>
+          Projectile Brand Filter
+        </label>
+        <select
+          className="input-control"
+          value={brandFilter}
+          onChange={(e) => setBrandFilter(e.target.value)}
+          style={{ fontSize: '11px', padding: '5px 8px', width: '100%' }}
+        >
+          <option value="all">All Brands ({caliberProjectiles.length} in cal)</option>
+          {manufacturers.map(m => (
+            <option key={m} value={m}>{m} ({caliberProjectiles.filter(p => p.manufacturer === m).length})</option>
+          ))}
+        </select>
       </div>
 
       {/* Bullet Selector with Manufacturer Grouping */}
@@ -160,7 +148,7 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
           style={{ width: '100%', minWidth: 0, maxWidth: '100%', textOverflow: 'ellipsis' }}
         >
           {Object.entries(groupedProjectiles).map(([mfg, items]) => (
-            <optgroup key={mfg} label={mfg.toUpperCase()}>
+            <optgroup key={mfg} label={`── ${mfg.toUpperCase()} (${items.length}) ──`}>
               {items.map(p => (
                 <option key={p.id} value={p.id}>
                   {p.name} ({p.weight_grains} gr, L: {p.length_in}")
@@ -209,7 +197,7 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
 
         {/* Seating Depth */}
         <div className="input-field">
-          <label className="input-label">Seating Depth into Case</label>
+          <label className="input-label">Seating Depth into Case ({isMetric ? 'mm' : 'in'})</label>
           <input
             type="number"
             step="0.005"
@@ -222,7 +210,7 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
         {/* Barrel Twist Rate */}
         <div className="input-field">
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
-            <label className="input-label" style={{ margin: 0 }}>Barrel Twist Rate</label>
+            <label className="input-label" style={{ margin: 0 }}>Rifling Twist Rate</label>
             <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)' }}>
               1:{barrelTwistInches}"
             </span>
@@ -237,28 +225,65 @@ export const ProjectileDeck: React.FC<ProjectileDeckProps> = ({
         </div>
       </div>
 
-      {/* --- JUMP & TOUCHING LANDS SECTION --- */}
-      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-        <button
-          onClick={() => onChangeTouchingLands(!isTouchingLands)}
-          style={{
-            flex: 1,
-            padding: '6px 10px',
-            fontSize: '11px',
-            fontWeight: 600,
-            borderRadius: '4px',
-            border: `1px solid ${isTouchingLands ? 'var(--status-caution)' : 'var(--border-color)'}`,
-            backgroundColor: isTouchingLands ? 'rgba(245, 158, 11, 0.15)' : 'var(--bg-secondary)',
-            color: isTouchingLands ? 'var(--status-caution)' : 'var(--text-secondary)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-          }}
-        >
-          <span>{isTouchingLands ? '⚠ Jammed / Touching Lands (+150 bar)' : 'Standard Freebore Jump'}</span>
-        </button>
+      {/* --- RIFLING LEADE ENGAGEMENT (SHOT START PRESSURE) --- */}
+      <div style={{
+        padding: '8px 10px',
+        backgroundColor: 'var(--bg-secondary)',
+        borderRadius: '6px',
+        border: `1px solid ${isTouchingLands ? 'rgba(245, 158, 11, 0.4)' : 'var(--border-color)'}`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '6px',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <label className="input-label" style={{ margin: 0, fontWeight: 700, color: isTouchingLands ? 'var(--status-caution)' : 'var(--text-secondary)' }}>
+            Rifling Leade Engagement
+          </label>
+          <span style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: isTouchingLands ? 'var(--status-caution)' : 'var(--text-muted)' }}>
+            {isTouchingLands ? 'P₀ Engraving Spike: +150 bar (+2,175 psi)' : 'Standard Freebore Jump (Normal P₀)'}
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button
+            type="button"
+            onClick={() => onChangeTouchingLands(false)}
+            style={{
+              flex: 1,
+              padding: '5px 8px',
+              fontSize: '11px',
+              fontWeight: !isTouchingLands ? 700 : 500,
+              borderRadius: '4px',
+              border: `1px solid ${!isTouchingLands ? 'var(--accent-cyan)' : 'var(--border-color)'}`,
+              backgroundColor: !isTouchingLands ? 'rgba(6, 182, 212, 0.15)' : 'var(--bg-tertiary)',
+              color: !isTouchingLands ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+              cursor: 'pointer',
+            }}
+          >
+            Freebore Jump (Standard)
+          </button>
+          <button
+            type="button"
+            onClick={() => onChangeTouchingLands(true)}
+            style={{
+              flex: 1,
+              padding: '5px 8px',
+              fontSize: '11px',
+              fontWeight: isTouchingLands ? 700 : 500,
+              borderRadius: '4px',
+              border: `1px solid ${isTouchingLands ? 'var(--status-caution)' : 'var(--border-color)'}`,
+              backgroundColor: isTouchingLands ? 'rgba(245, 158, 11, 0.15)' : 'var(--bg-tertiary)',
+              color: isTouchingLands ? 'var(--status-caution)' : 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+            }}
+          >
+            {isTouchingLands && <AlertTriangle size={12} />}
+            <span>Touching / Jammed Lands (+150 bar)</span>
+          </button>
+        </div>
       </div>
 
       {/* --- MILLER GYROSCOPIC STABILITY HUD --- */}

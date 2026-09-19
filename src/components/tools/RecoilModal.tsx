@@ -46,7 +46,7 @@ export const RecoilModal: React.FC<RecoilModalProps> = ({
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose}>
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -201,19 +201,8 @@ export const RecoilModal: React.FC<RecoilModalProps> = ({
           </div>
         </div>
 
-        <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', padding: '10px 16px', display: 'flex', justifyContent: 'flex-end' }}>
-          <button
-            onClick={onClose}
-            style={{
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '4px',
-              padding: '6px 14px',
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
-          >
+        <div className="modal-footer">
+          <button onClick={onClose} className="btn-secondary">
             Close
           </button>
         </div>

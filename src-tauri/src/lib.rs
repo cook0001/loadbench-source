@@ -2,7 +2,7 @@ pub mod ballistics;
 pub mod formats;
 
 use ballistics::solver::{solve_interior_ballistics, NativeBallisticsInput, NativeSimulationResult};
-use formats::quickload::{parse_vol_line, QuickLoadVolRecord};
+use formats::vol_format::{parse_vol_line, VolRecord};
 
 #[tauri::command]
 fn calculate_interior_ballistics(input: NativeBallisticsInput) -> NativeSimulationResult {
@@ -10,7 +10,7 @@ fn calculate_interior_ballistics(input: NativeBallisticsInput) -> NativeSimulati
 }
 
 #[tauri::command]
-fn parse_quickload_vol_native(line: String) -> Option<QuickLoadVolRecord> {
+fn parse_vol_native(line: String) -> Option<VolRecord> {
     parse_vol_line(&line)
 }
 
@@ -20,8 +20,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             calculate_interior_ballistics,
-            parse_quickload_vol_native
+            parse_vol_native
         ])
         .run(tauri::generate_context!())
-        .expect("error while running QuickLOAD Studio");
+        .expect("error while running LoadBench Studio");
 }

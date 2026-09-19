@@ -200,7 +200,7 @@ export const ExportReportModal: React.FC<ExportReportModalProps> = ({
         </div>
 
         <div className="modal-footer">
-          <button onClick={onClose} style={btnSecondaryStyle}>Close</button>
+          <button onClick={onClose} className="btn-secondary">Close</button>
         </div>
       </div>
     </div>
@@ -220,13 +220,4 @@ const actionBtnStyle: React.CSSProperties = {
   fontSize: '11px',
   fontWeight: 600,
   cursor: 'pointer',
-};
-
-const btnSecondaryStyle: React.CSSProperties = {
-  backgroundColor: 'var(--bg-secondary)',
-  color: 'var(--text-primary)',
-  border: '1px solid var(--border-color)',
-  borderRadius: '4px',
-  padding: '6px 14px',
-  fontSize: '12px',
 };
