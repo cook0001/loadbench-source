@@ -19,10 +19,21 @@ pub fn parse_vol_line(line: &str) -> Option<VolRecord> {
         return None;
     }
 
-    let fields: Vec<&str> = clean
-        .split("\",\"")
-        .map(|f| f.trim_matches('"'))
-        .collect();
+    let mut fields: Vec<String> = Vec::new();
+    let mut current = String::new();
+    let mut in_quotes = false;
+
+    for c in clean.chars() {
+        match c {
+            '"' => in_quotes = !in_quotes,
+            ',' if !in_quotes => {
+                fields.push(current.trim().trim_matches('"').to_string());
+                current.clear();
+            }
+            _ => current.push(c),
+        }
+    }
+    fields.push(current.trim().trim_matches('"').to_string());
 
     if fields.len() < 8 {
         return None;
