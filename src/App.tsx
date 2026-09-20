@@ -58,8 +58,10 @@ import { CartridgeCompareModal } from './components/tools/CartridgeCompareModal'
 import { ThermalStabilityModal } from './components/tools/ThermalStabilityModal';
 import { BackupRestoreModal } from './components/tools/BackupRestoreModal';
 import { SettingsModal, DEFAULT_SETTINGS, LoadBenchSettings } from './components/tools/SettingsModal';
+import { invoke } from '@tauri-apps/api/core';
+import { listen } from '@tauri-apps/api/event';
 import { UserManualModal } from './components/tools/UserManualModal';
-import { LegalDisclaimerModal } from './components/tools/LegalDisclaimerModal';
+import { LicenseModal } from './components/modals/LicenseModal';
 import { EcosystemModal } from './components/tools/EcosystemModal';
 import { PrimerDatabaseModal } from './components/tools/PrimerDatabaseModal';
 import { PowderBurnChartModal } from './components/tools/PowderBurnChartModal';
@@ -572,45 +574,108 @@ export const App: React.FC = () => {
     if (typeof recipe.baOffsetPct === 'number') setBaOffsetPct(recipe.baOffsetPct);
   };
 
+  const processImportedFileText = (text: string) => {
+    try {
+      // 1. Try parsing native LoadBench recipe (.loadbench / .ldb)
+      const parsedRecipe = parseLoadBenchRecipeJSON(text);
+      if (parsedRecipe) {
+        handleImportLoadRecipe(parsedRecipe);
+        return true;
+      }
+      // 2. Try parsing Wildcat Studio spec (.wildcat / .wcs)
+      const parsedWildcat = parseWildcatSpecJSON(text);
+      if (parsedWildcat && parsedWildcat.name) {
+        handleSaveCustomWildcat(parsedWildcat as CartridgeSpec);
+        return true;
+      }
+      // 3. Fallback legacy load JSON
+      const data = JSON.parse(text);
+      if (data.cartridge) setCartridge(data.cartridge);
+      if (data.projectile) setProjectile(data.projectile);
+      if (data.propellant) setPropellant(data.propellant);
+      if (data.chargeGrains) setChargeGrains(data.chargeGrains);
+      if (data.barrelLengthInches) setBarrelLength(data.barrelLengthInches);
+      if (data.seatingDepthInches) setSeatingDepth(data.seatingDepthInches);
+      if (data.primer) setSelectedPrimer(data.primer);
+      if (data.primerPocket) setSelectedPrimerPocket(data.primerPocket);
+      if (typeof data.powderTemperatureF === 'number') setPowderTemperatureF(data.powderTemperatureF);
+      if (typeof data.isTouchingLands === 'boolean') setIsTouchingLands(data.isTouchingLands);
+      if (typeof data.baOffsetPct === 'number') setBaOffsetPct(data.baOffsetPct);
+      return true;
+    } catch (err) {
+      console.error('Failed to parse load project file:', err);
+      return false;
+    }
+  };
+
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (event) => {
-      try {
-        const text = event.target?.result as string;
-        // 1. Try parsing native LoadBench recipe (.loadbench / .ldb)
-        const parsedRecipe = parseLoadBenchRecipeJSON(text);
-        if (parsedRecipe) {
-          handleImportLoadRecipe(parsedRecipe);
-          return;
-        }
-        // 2. Try parsing Wildcat Studio spec (.wildcat / .wcs)
-        const parsedWildcat = parseWildcatSpecJSON(text);
-        if (parsedWildcat && parsedWildcat.name) {
-          handleSaveCustomWildcat(parsedWildcat as CartridgeSpec);
-          return;
-        }
-        // 3. Fallback legacy load JSON
-        const data = JSON.parse(text);
-        if (data.cartridge) setCartridge(data.cartridge);
-        if (data.projectile) setProjectile(data.projectile);
-        if (data.propellant) setPropellant(data.propellant);
-        if (data.chargeGrains) setChargeGrains(data.chargeGrains);
-        if (data.barrelLengthInches) setBarrelLength(data.barrelLengthInches);
-        if (data.seatingDepthInches) setSeatingDepth(data.seatingDepthInches);
-        if (data.primer) setSelectedPrimer(data.primer);
-        if (data.primerPocket) setSelectedPrimerPocket(data.primerPocket);
-        if (typeof data.powderTemperatureF === 'number') setPowderTemperatureF(data.powderTemperatureF);
-        if (typeof data.isTouchingLands === 'boolean') setIsTouchingLands(data.isTouchingLands);
-        if (typeof data.baOffsetPct === 'number') setBaOffsetPct(data.baOffsetPct);
-      } catch (err) {
-        console.error('Failed to parse load project file:', err);
-      }
+      const text = event.target?.result as string;
+      if (text) processImportedFileText(text);
     };
     reader.readAsText(file);
     e.target.value = '';
   };
+
+  // Handle cold-start and runtime file opens via macOS File Associations and Drag-Drop
+  useEffect(() => {
+    // 1. Check for pending file on startup (cold start via Finder or CLI)
+    invoke<{ name: string; path: string; content: string } | null>('get_pending_open_file')
+      .then((pending) => {
+        if (pending && pending.content) {
+          processImportedFileText(pending.content);
+        }
+      })
+      .catch(() => {});
+
+    // 2. Listen for live file-open events from Tauri event loop (runtime Finder "Open With" / double-click)
+    let unlistenFn: (() => void) | null = null;
+    listen<{ name: string; path: string; content: string }>('loadbench://open-file', (event) => {
+      if (event.payload && event.payload.content) {
+        processImportedFileText(event.payload.content);
+      }
+    })
+      .then((unlisten) => {
+        unlistenFn = unlisten;
+      })
+      .catch(() => {});
+
+    // 3. Window Drag-and-Drop Handler (drag .loadbench or .wildcat file onto LoadBench window)
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = 'copy';
+      }
+    };
+
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
+      const files = e.dataTransfer?.files;
+      if (!files || files.length === 0) return;
+
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const text = ev.target?.result as string;
+        if (text) {
+          processImportedFileText(text);
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    window.addEventListener('dragover', handleDragOver);
+    window.addEventListener('drop', handleDrop);
+
+    return () => {
+      if (unlistenFn) unlistenFn();
+      window.removeEventListener('dragover', handleDragOver);
+      window.removeEventListener('drop', handleDrop);
+    };
+  }, []);
 
   return (
     <div className="app-container">
@@ -1043,10 +1108,11 @@ export const App: React.FC = () => {
       <UserManualModal
         isOpen={isUserManualOpen}
         onClose={() => setIsUserManualOpen(false)}
+        onOpenLicense={() => setIsLegalDisclaimerOpen(true)}
       />
 
-      {/* Reloading Safety & Legal Simulation Disclaimer */}
-      <LegalDisclaimerModal
+      {/* Software License & Legal Terms Modal */}
+      <LicenseModal
         isOpen={isLegalDisclaimerOpen}
         onClose={() => setIsLegalDisclaimerOpen(false)}
       />
@@ -1129,7 +1195,7 @@ export const App: React.FC = () => {
       <input
         ref={fileInputRef}
         type="file"
-        accept=".load,.json"
+        accept=".loadbench,.ldb,.wildcat,.wcs,.load,.json"
         style={{ display: 'none' }}
         onChange={handleFileSelected}
       />

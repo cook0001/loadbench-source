@@ -70,7 +70,7 @@ export const parseQuickDesignQDF = parseUniversalQDF;
 export function parseWildcatSpecJSON(content: string): Partial<CartridgeSpec> | null {
   try {
     const data = JSON.parse(content);
-    if (!data || (data.format !== 'wildcat_cartridge_specification' && !data.dimensions)) {
+    if (!data || (data.format !== 'wildcat_cartridge_specification' && !data.dimensions && !data.bulletDiameter && !data.bullet_diameter)) {
       return null;
     }
 
@@ -79,14 +79,14 @@ export function parseWildcatSpecJSON(content: string): Partial<CartridgeSpec> | 
     const vol = data.volumetrics || {};
     const safety = data.safety_limits || {};
 
-    const name = meta.name || 'Wildcat Cartridge';
-    const id = meta.id || `wildcat_${name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-    const bulletDia = dims.bullet_diameter_in || dims.bullet_diameter || 0.264;
-    const caseLength = dims.case_length_in || dims.case_length || 2.0;
-    const coal = dims.coal_in || dims.coal || caseLength + 0.8;
-    const maxBar = safety.max_pressure_bar || 4200;
-    const maxPsi = safety.max_pressure_psi || Math.round(maxBar * 14.5038);
-    const overflowH2O = vol.overflow_capacity_grains_h2o || 50.0;
+    const name = meta.name || data.name || 'Wildcat Cartridge';
+    const id = meta.id || data.id || `wildcat_${name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+    const bulletDia = dims.bullet_diameter_in || dims.bullet_diameter || data.bulletDiameter || dims.bulletDiameter || 0.264;
+    const caseLength = dims.case_length_in || dims.case_length || data.caseLength || dims.caseLength || 2.0;
+    const coal = dims.overall_length_in || dims.overallLength || data.overallLength || dims.coal_in || dims.coal || caseLength + 0.8;
+    const maxBar = safety.max_pressure_bar || data.max_pressure_bar || 4200;
+    const maxPsi = safety.max_pressure_psi || vol.est_peak_pressure_psi || data.estPeakPressurePsi || data.max_pressure_psi || Math.round(maxBar * 14.5038);
+    const overflowH2O = vol.gross_water_capacity_gr_h2o || vol.overflow_capacity_grains_h2o || vol.effective_capacity_gr_h2o || data.waterCapacityGrains || 50.0;
     const boreArea = Math.PI * Math.pow(bulletDia / 2, 2) * 0.988;
 
     return {
@@ -104,8 +104,8 @@ export function parseWildcatSpecJSON(content: string): Partial<CartridgeSpec> | 
       max_pressure_bar: maxBar,
       max_pressure_psi: maxPsi,
       default_barrel_length_in: 24.0,
-      rim_diameter_in: dims.rim_diameter_in || dims.rim_diameter,
-      base_diameter_in: dims.base_diameter_in || dims.base_diameter,
+      rim_diameter_in: dims.rim_diameter_in || dims.rim_diameter || data.rimDiameter || dims.rimDiameter,
+      base_diameter_in: dims.base_diameter_in || dims.base_diameter || data.baseDiameter || dims.baseDiameter,
     };
   } catch {
     return null;
@@ -271,7 +271,7 @@ export function parseLegacyBulRecord(content: string): Partial<ProjectileSpec>[]
 }
 
 /**
- * Exports complete load recipe configuration (.qlo / JSON format).
+ * Exports complete load recipe configuration (.loadbench / JSON format).
  */
 export function exportLoadRecipeJSON(load: {
   cartridge: CartridgeSpec;
@@ -281,13 +281,94 @@ export function exportLoadRecipeJSON(load: {
   barrelLengthInches: number;
   seatingDepthInches: number;
   shotStartPressureBar: number;
+  barrelTwistInches?: number;
+  powderTemperatureF?: number;
+  isTouchingLands?: boolean;
+  baOffsetPct?: number;
+  primer?: any;
+  primerPocket?: any;
+  metadata?: {
+    recipe_title?: string;
+    author?: string;
+    lot_number?: string;
+    batch_size?: number;
+    target_firearm?: string;
+    notes?: string;
+  };
+  performance?: {
+    muzzle_velocity_fps?: number;
+    muzzle_energy_ft_lbs?: number;
+    max_pressure_bar?: number;
+    max_pressure_psi?: number;
+    barrel_time_ms?: number;
+    propellant_burnt_pct?: number;
+    loading_density_pct?: number;
+    pressure_status?: string;
+  };
 }): string {
-  return JSON.stringify({
-    format: 'LoadBench_Load_Record',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-    ...load,
-  }, null, 2);
+  const author =
+    load.metadata?.author ||
+    (typeof localStorage !== 'undefined' ? localStorage.getItem('loadbench_author_name') : '') ||
+    'LoadBench Ballistician';
+
+  return JSON.stringify(
+    {
+      $schema: 'https://armstrader.store/schemas/loadbench-recipe-v1.json',
+      format: 'loadbench_recipe',
+      legacy_format: 'LoadBench_Load_Record',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      metadata: {
+        recipe_title: load.metadata?.recipe_title || `${load.cartridge.name} Load Recipe`,
+        author,
+        created_at: new Date().toISOString(),
+        lot_number: load.metadata?.lot_number || 'LOT-001',
+        batch_size: load.metadata?.batch_size || 50,
+        target_firearm: load.metadata?.target_firearm || `${load.cartridge.name} Precision Rifle`,
+        notes:
+          load.metadata?.notes ||
+          `Developed in LoadBench Studio. Muzzle velocity: ${load.performance?.muzzle_velocity_fps ? `${load.performance.muzzle_velocity_fps} fps` : 'Simulated'}.`,
+      },
+      cartridge: {
+        ...load.cartridge,
+        bullet_diameter_in: load.cartridge.bullet_diameter_in || load.projectile.caliber_in,
+      },
+      projectile: {
+        ...load.projectile,
+        caliber_in: load.projectile.caliber_in || load.cartridge.bullet_diameter_in,
+      },
+      propellant: load.propellant,
+      charge: {
+        charge_grains: load.chargeGrains,
+        temperature_f: load.powderTemperatureF ?? 70,
+        ba_offset_pct: load.baOffsetPct ?? 0,
+      },
+      dimensions: {
+        barrel_length_in: load.barrelLengthInches,
+        barrel_twist_in: load.barrelTwistInches || 8.0,
+        seating_depth_in: load.seatingDepthInches,
+        shot_start_pressure_bar: load.shotStartPressureBar,
+        is_touching_lands: load.isTouchingLands || false,
+      },
+      primer: load.primer || {
+        name: 'Standard Primer',
+        pocket_size: load.primerPocket || 'large_rifle',
+      },
+      performance: load.performance || {},
+      simulated: load.performance || {},
+      // Flat fields for backward-compatibility with legacy LoadBench parsers
+      chargeGrains: load.chargeGrains,
+      barrelLengthInches: load.barrelLengthInches,
+      barrelTwistInches: load.barrelTwistInches || 8.0,
+      seatingDepthInches: load.seatingDepthInches,
+      shotStartPressureBar: load.shotStartPressureBar,
+      powderTemperatureF: load.powderTemperatureF ?? 70,
+      isTouchingLands: load.isTouchingLands || false,
+      baOffsetPct: load.baOffsetPct ?? 0,
+    },
+    null,
+    2
+  );
 }
 
 export interface ParsedLoadBenchRecipe {

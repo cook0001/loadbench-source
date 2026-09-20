@@ -4,10 +4,72 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release Tag Name (e.g. v1.0.1)'
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  pre-release-qc:
+    name: Fast Pre-Release Gate (Cost Guard)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript Typecheck Verification
+        run: npm run typecheck
+
+      - name: Production Bundle Verification
+        run: npm run build
+
+      - name: Setup Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libssl-dev
+
+      - name: Cargo Check
+        run: cargo check --manifest-path src-tauri/Cargo.toml
+
+      - name: Cargo Clippy Linter
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings
+
+      - name: Ballistics Unit Tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml --verbose
+
   release:
+    name: Build Installer (${{ matrix.platform }})
+    needs: [pre-release-qc]
     permissions:
       contents: write
     strategy:
@@ -29,7 +91,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js
+      - name: Install Node.js 22 LTS
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -40,11 +102,21 @@ jobs:
         with:
           targets: ${{ matrix.targets }}
 
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
       - name: Install Linux build dependencies
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libssl-dev
 
       - name: Install npm dependencies
         run: npm ci
@@ -55,30 +127,68 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'LoadBench Studio ${{ github.ref_name }}'
+          tagName: ${{ inputs.release_tag || github.ref_name }}
+          releaseName: 'LoadBench Studio ${{ inputs.release_tag || github.ref_name }}'
           releaseBody: 'Pre-compiled standalone installers for macOS (Universal - Intel & Apple Silicon), Windows (x64), and Linux.'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
 
-  notify-store:
-    name: Notify ArmsTrader Store
+  generate-checksums:
+    name: Generate & Publish SHA256 Checksums
     needs: [release]
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger ArmsTrader Store Sync
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Release Assets & Compute SHA256
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ inputs.release_tag || github.ref_name }}
+        run: |
+          mkdir -p release-assets
+          gh release download "$TAG_NAME" --dir release-assets || true
+          cd release-assets
+          rm -f SHA256SUMS.txt
+          if compgen -G "*.*" > /dev/null; then
+            sha256sum * > SHA256SUMS.txt
+            gh release upload "$TAG_NAME" SHA256SUMS.txt --clobber
+            echo "SHA256SUMS.txt generated and attached to release."
+          fi
+
+  notify-store:
+    name: Notify ArmsTrader Store
+    needs: [generate-checksums]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger ArmsTrader Store Direct Sync
+        env:
+          ARMSTRADER_WEBHOOK_KEY: ${{ secrets[format('{0}', 'ARMSTRADER_WEBHOOK_KEY')] }}
+          ADMIN_API_KEY: ${{ secrets[format('{0}', 'ADMIN_API_KEY')] }}
+          ARMSTRADER_DISPATCH_TOKEN: ${{ secrets[format('{0}', 'ARMSTRADER_DISPATCH_TOKEN')] }}
+          TAG_NAME: ${{ inputs.release_tag || github.ref_name }}
         run: |
           echo "LoadBench release successfully published to GitHub."
-          if [ -n "${{ secrets.ARMSTRADER_DISPATCH_TOKEN }}" ]; then
+          KEY="${ARMSTRADER_WEBHOOK_KEY:-$ADMIN_API_KEY}"
+          if [ -n "$KEY" ]; then
+            echo "Notifying ArmsTrader Store direct VPS webhook endpoint..."
+            curl -s -X POST \
+              -H "Authorization: Bearer $KEY" \
+              -H "Content-Type: application/json" \
+              https://armstrader.store/api/admin/sync-downloads \
+              -d "{\"app\": \"loadbench\"}" || true
+          elif [ -n "$ARMSTRADER_DISPATCH_TOKEN" ]; then
             echo "Dispatching release sync to cook0001/armstrader.store..."
             curl -s -X POST \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.ARMSTRADER_DISPATCH_TOKEN }}" \
+              -H "Authorization: Bearer $ARMSTRADER_DISPATCH_TOKEN" \
               https://api.github.com/repos/cook0001/armstrader.store/dispatches \
-              -d '{"event_type": "app_released", "client_payload": {"app": "loadbench", "version": "${{ github.ref_name }}"}}' || true
+              -d "{\"event_type\": \"app_released\", \"client_payload\": {\"app\": \"loadbench\", \"version\": \"$TAG_NAME\"}}" || true
           else
-            echo "Notice: ARMSTRADER_DISPATCH_TOKEN not configured in source repository."
-            echo "ArmsTrader Store autonomous 2-hour cron sync will detect and stream these new binaries to the server."
+            echo "Notice: Direct webhook keys not configured in repository secrets."
+            echo "ArmsTrader Store autonomous background sync engine will detect and stream these new binaries to the server."
           fi
 

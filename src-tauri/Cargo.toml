@@ -1,6 +1,6 @@
 [package]
 name = "quick-load-studio"
-version = "1.0.0"
+version = "1.1.0"
 description = "LoadBench Studio - High-Performance Interior Ballistics Suite"
 authors = ["LoadBenchStudio"]
 edition = "2021"

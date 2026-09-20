@@ -14,6 +14,7 @@ import {
   Search, 
   Compass, 
   Shield, 
+  Scale,
   Ruler, 
   Calculator, 
   Thermometer, 
@@ -426,9 +427,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>Comprehensive User Manual</span>
               </button>
 
-              <button onClick={() => handleAction(onOpenLegalDisclaimer)} className="nav-dropdown-item" style={{ color: 'var(--accent-orange)' }}>
-                <Shield size={14} color="var(--accent-orange)" />
-                <span>Reloading Safety &amp; Legal Disclaimer</span>
+              <button onClick={() => handleAction(onOpenLegalDisclaimer)} className="nav-dropdown-item">
+                <Scale size={14} color="var(--accent-cyan)" />
+                <span>Software License &amp; Legal Terms...</span>
               </button>
             </div>
           )}

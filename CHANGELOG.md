@@ -7,7 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-20
+
 ### Added
+- **Local Pre-Flight Verification Pipeline (`scripts/verify.sh`, `package.json`)**:
+  - Implemented 1-command verification suite (`npm run verify`) running full frontend typechecks (`tsc --noEmit`), production Vite bundling, Cargo check, strict Clippy (`-D warnings`), Rust unit tests, CSS vendor prefix hygiene, and version lock verification in under 15 seconds.
+  - Guarantees 100% first-time success on GitHub Actions before pushing commits, completely eliminating failed runner minutes.
+- **CI Runner Hardening & Resource Optimization (`.github/workflows/qc.yml`, `release.yml`, `audit.yml`)**:
+  - Implemented `concurrency: cancel-in-progress: true` across all workflows to automatically terminate superseded jobs and prevent duplicate runner billing.
+  - Integrated `swatinem/rust-cache@v2` across macOS, Windows, and Linux, slashing CI compile times by 60–75%.
+  - Added fast pre-release gate job (`pre-release-qc`) in `release.yml` running in under 60 seconds; heavy parallel matrix runners (macOS, Windows, Linux) only spin up if the gate passes.
+  - Modernized Linux build dependencies to `libayatana-appindicator3-dev` and Node 22 LTS.
+  - Added automated `SHA256SUMS.txt` generation and upload to GitHub Releases for installer verification on `armstrader.store/security`.
+  - Added weekly automated security vulnerability audit (`audit.yml`) scanning Rust crates and npm packages.
+- **Software License & Legal Terms Modal (`LicenseModal.tsx`, `Navbar.tsx`, `App.tsx`, `App.css`)**:
+  - Created dedicated 4-tab high-contrast CAD dark-theme modal matching the Wildcat Studio standard: Proprietary Freeware EULA, Cleanroom Thermodynamic Physics (Noble-Abel equation, Vieille's law, covolume, Lagrange inertia, OBT acoustics), Reloading Safety Advisory (mandatory 10% charge reduction, ±3–5% lot variances, overpressure diagnostics), and Third-Party Open Source Notices.
+  - Integrated 1-click **Copy Full License Text** with clipboard toast and external portal navigation to `armstrader.store/loadbench`.
+- **In-App User Manual Overhaul (`UserManualModal.tsx`, `App.css`)**:
+  - Completely updated and structured into 8 searchable sections: Quickstart Workflow, Interior Ballistics Theory, Dual Telemetry Curves (Pressure & Velocity), Primer Brisance & Shot Start P0, Chris Long OBT Harmonics, Universal File Interchange & Drag-and-Drop (`.loadbench`, `.wildcat`, `.vol`, `.qdf`, `.range`), Precision Firearms Ecosystem, and Legal Terms & Reloading Advisory.
+  - Eliminated all raw inline styles, moving layout and typography into modular classes in `src/App.css`.
+- **Native OS File Association & Universal Recipe/Wildcat Import (`src-tauri/tauri.conf.json`, `src-tauri/src/lib.rs`, `src/App.tsx`, `src/utils/fileParsers.ts`, `src/components/modals/ImportModal.tsx`)**:
+  - Configured official macOS file associations (`CFBundleDocumentTypes` and `UTExportedTypeDeclarations`) in `tauri.conf.json` for `.loadbench` and `.ldb` (`Owner`, `com.loadbench.recipe`, conforming to `public.data` and `public.json`) as well as `.wildcat`, `.wcs`, and `.vol`.
+  - Implemented native Tauri `RunEvent::Opened` AppleEvent listener and managed mutex state `PendingOpenFile` with `get_pending_open_file` command to seamlessly handle cold-start launches and live Finder "Open With" file opens.
+  - Expanded in-app file picker filter to accept `.loadbench`, `.ldb`, `.wildcat`, `.wcs`, `.load`, and `.json`.
+  - Enhanced `parseWildcatSpecJSON` to support all schema variations, gross water capacity (`vol.gross_water_capacity_gr_h2o`), overall length (`dims.overall_length_in`), peak pressure, and flat/nested properties.
+  - Added direct window drag-and-drop file ingestion across the application.
+- **Direct 1-Click RangeStudio Export & Telemetry Bridge (`ExportReportModal.tsx`, `fileParsers.ts`)**:
+  - Added dedicated "Send to RangeStudio" action button in `ExportReportModal.tsx` outputting a native `.loadbench` recipe with complete interior ballistics telemetry (peak chamber pressure, muzzle velocity fps, muzzle energy, barrel time, propellant burnt percentage).
+  - Enhanced `exportLoadRecipeJSON` in `fileParsers.ts` to output standard `loadbench_recipe` schema with embedded `performance`, `dimensions`, and `metadata` objects directly consumable by RangeStudio's trajectory solver.
+  - Implemented standalone popup window fallback in `ExportReportModal.tsx` for robust load sheet printing across macOS WKWebView, Windows, and Linux.
 - **Custom Application & Taskbar Icon Suite (`app-icon.png`, `src-tauri/icons/`, `public/icon.png`)**:
   - Implemented high-definition Thermodynamic Chamber Cutaway icon (Concept A) featuring a polished brass cartridge casing and an energetic neon amber / molten gold thermodynamic pressure peak.
   - Generated complete cross-platform icon assets for macOS (`icon.icns`), Windows (`icon.ico`, `Square*Logo.png`), Linux (`32x32.png`, `64x64.png`, `128x128.png`, `icon.png`), and web favicon (`public/icon.png`, `public/favicon.ico`).

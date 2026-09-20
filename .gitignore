@@ -30,3 +30,9 @@ src-tauri/target
 .agents/
 AGENTS.md
 agents.md
+
+# Local scratch & developer notes
+Current_bugs
+current_bugs
+Current_bugs.*
+*.scratch.*
