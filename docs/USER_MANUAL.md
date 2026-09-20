@@ -73,7 +73,7 @@ The interactive Canvas renders two simultaneous curves along the length of the b
 ### Safety Diagnostic Color Codes:
 - 🟢 **Safe / Optimal**: Peak pressure is below 95% of SAAMI/CIP Maximum Average Pressure (MAP).
 - 🟡 **Near Maximum (Caution)**: Peak pressure is between 95% and 100% of MAP.
-- 🔴 **Overpressure Danger**: Peak pressure exceeds SAAMI/CIP proof/working limits. Reduce charge immediately!
+- [DANGER] **Overpressure Danger**: Peak pressure exceeds SAAMI/CIP proof/working limits. Reduce charge immediately!
 
 ---
 

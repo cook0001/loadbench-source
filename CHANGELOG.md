@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Proprietary Freeware License & Distribution Alignment (`package.json`, `README.md`, `LICENSE`)**:
+  - Formalized proprietary free-to-use licensing model under the LoadBench End User License Agreement.
+  - Updated `package.json` to `"license": "SEE LICENSE IN LICENSE"`.
+  - Updated `README.md` with Proprietary Freeware badge and comprehensive License section.
+  - Established dedicated public binary release repository at [`cook0001/loadbench`](https://github.com/cook0001/loadbench) for pre-compiled standalone installers, SHA-256 checksums, and CI release verification.
+  - Clarified in documentation that `armstrader.store` is a free digital utilities suite for firearm owners, not a marketplace.
+  - Aligned binary release distribution references to `https://armstrader.store`.
 - **Native Handloading Recipe Interchange (`.loadbench` / `.ldb`) & Dedicated Modal (`SaveLoadProjectModal.tsx`)**:
   - Interactive save dialog exporting complete handload recipe matching `https://armstrader.store/schemas/loadbench-recipe-v1.json` (`application/vnd.loadbench.recipe+json`).
   - Preserves author attribution, production lot number, batch round count, target firearm, CBTO, jump to lands, and complete interior ballistics summary.

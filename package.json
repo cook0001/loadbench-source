@@ -2,10 +2,14 @@
   "name": "loadbench",
   "private": true,
   "version": "1.0.0",
+  "description": "LoadBench Studio — Industrial Desktop Interior Ballistics Simulation, Propellant Combustion & Chamber Pressure Modeling Suite",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "typecheck": "tsc --noEmit",
+    "qc": "npm run build",
     "preview": "vite preview",
     "tauri": "tauri"
   },

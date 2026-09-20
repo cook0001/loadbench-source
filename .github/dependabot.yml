@@ -1,0 +1,46 @@
+version: 2
+updates:
+  # Monitor and update npm dependencies (React 19, Vite, Lucide)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "npm"
+
+  # Monitor and update Cargo dependencies for Tauri Rust backend
+  - package-ecosystem: "cargo"
+    directory: "/src-tauri"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "cargo"
+    commit-message:
+      prefix: "cargo"
+
+  # Monitor and update GitHub Actions workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "actions"
+    commit-message:
+      prefix: "ci"

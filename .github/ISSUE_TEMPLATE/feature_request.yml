@@ -1,0 +1,32 @@
+name: Feature Request
+description: Propose an idea, propellant data, or enhancement for LoadBench Studio
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea or propellant request to improve **LoadBench Studio**? We welcome suggestions from reloaders, wildcatters, and ballisticians!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement / Use Case
+      description: Is your feature request related to a specific workflow problem or need?
+      placeholder: "e.g. When simulating progressive propellant burn rates, I need to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: Describe what you would like to happen and how the interface or solver should behave.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or workarounds you have considered?
